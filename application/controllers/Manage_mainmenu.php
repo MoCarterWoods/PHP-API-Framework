@@ -42,4 +42,14 @@ class Manage_mainmenu extends CI_Controller {
         // print_r($result);
         echo json_encode($result);
     } 
+
+    public function update_mmn(){
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+        $result = $this->main->update_mmn($data, $sess);
+        // echo "<pre>";
+        // print_r($result);
+        echo json_encode($result);
+    }
+
 }

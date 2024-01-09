@@ -91,4 +91,54 @@ public function insert_main_menu($data, $sess) {
             return array('result' => false);
         }
     }
+
+
+
+    // public function update_mmn($data, $sess) {
+    //     $mmn = $data["MainMenuName"];
+    //     $mmi = $data["MainMenuIcon"];
+    //     $ordno = $data["OrderNo"];
+    
+    //     $data_chk_user = $this->get_mmn_data($empcode);
+    
+    //         if ($this->db->affected_rows() > 0) {
+    //             return array('result' => 1);
+    //         } else {
+    //             return array('result' => 0);
+            
+    //         } else {
+    //         $sql_update = "
+    //             UPDATE sys_account
+    //             SET sa_emp_code= '$empcode', 
+    //                 sa_emp_password= '$password',
+    //                 sa_fristname= '$firstname',
+    //                 sa_lastname= '$lastname',
+    //                 sa_email= '$email',
+    //                 spg_id= '$permisgroup',
+    //                 mpc_id= '$plant',
+    //                 sa_updated_date= NOW(),
+    //                 sa_updated_by= '$sess'
+    //             WHERE sa_emp_code= '$empcode';
+    //         ";
+    
+    //         $query_update = $this->db->query($sql_update);
+    
+    //         if ($this->db->affected_rows() > 0) {
+    //             return array('result' => 1); // อัปเดตสำเร็จ
+    //         } else {
+    //             return array('result' => 0); // ไม่สามารถอัปเดต
+    //         }
+    //     }
+    // }
+    
+    // private function get_mmn_data($mmn) {
+    //     $sql_select = "
+    //         SELECT *
+    //         FROM sys_main_menu
+    //         WHERE smm_name = '$mmn'
+    //     ";
+    
+    //     $query_select = $this->db->query($sql_select);
+    //     return $query_select->row();
+    // }
 }
