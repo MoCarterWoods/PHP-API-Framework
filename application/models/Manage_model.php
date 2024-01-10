@@ -111,12 +111,12 @@ class Manage_model extends CI_Model {
     }
 
 
-public function update_flg($data){
+public function update_flg($data,$sess){
     $stFlg = $data["newStatus"];
     $saId = $data["saId"];
 
     $sql = "UPDATE sys_account 
-    SET sa_status_flg = '$stFlg'
+    SET sa_status_flg = '$stFlg',sa_updated_date = NOW(),sa_updated_by = '$sess'
     WHERE sa_id = '$saId';";
     
     $query=$this->db->query($sql);

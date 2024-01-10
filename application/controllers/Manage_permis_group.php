@@ -1,58 +1,44 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Manage_mainmenu extends CI_Controller {
+class Manage_permis_group extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('Mainmenu_model', 'main');
+        $this->load->model('ManagePerminG_model', 'mang');
     }
 
-    public function show_main_menu(){
-        $result = $this->main->show_main_menu();
+    public function show_group_name(){
+        $result = $this->mang->show_group_name();
         // echo "<pre>";
         // print_r($result);
         echo json_encode($result);
     } 
 
-
-    public function insert_main_menu(){
-        $data = unserialize($this->input->post('data'));
+    public function update_flg(){
         $sess = unserialize($this->input->post('session'));
-        $result = $this->main->insert_main_menu($data, $sess);
-        // echo "<pre>";
-        // print_r($result);
-        echo json_encode($result);
-    } 
-
-
-    public function upd_status_main_menu(){
         $data = unserialize($this->input->post('data'));
-        $sess = unserialize($this->input->post('session'));
-        $result = $this->main->update_flg($data,$sess);
+        $result = $this->mang->update_flg($data,$sess);
        
         echo json_encode($result);
     }
 
-    public function show_show_mmn(){
+    public function show_show_mpg(){
         $data = $this->input->post();
        
         // $data = unserialize($this->input->post('data'));
-        $result = $this->main->show_show_mmn($data);
+        $result = $this->mang->show_show_mpg($data);
         // echo "<pre>";
         // print_r($result);
         echo json_encode($result);
     } 
 
-    public function update_mmn(){
-
+    public function update_mpg_name(){
         $data = unserialize($this->input->post('data'));
         $sess = unserialize($this->input->post('session'));
-
-        $result = $this->main->update_mmn($data, $sess);
+        $result = $this->mang->update_mpg_name($data, $sess);
         // echo "<pre>";
         // print_r($result);
         echo json_encode($result);
     }
-
 }

@@ -40,8 +40,9 @@ class Manage_account extends CI_Controller {
     }
     
     public function upstatus(){
+        $sess = unserialize($this->input->post('session'));
         $data = unserialize($this->input->post('data'));
-        $result = $this->mang->update_flg($data);
+        $result = $this->mang->update_flg($data,$sess);
        
         echo json_encode($result);
     }
