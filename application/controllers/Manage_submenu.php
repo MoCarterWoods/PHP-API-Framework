@@ -23,6 +23,16 @@ class Manage_submenu extends CI_Controller {
         // print_r($result);
         echo json_encode($result);
     } 
+
+
+    public function update_flg(){
+        $sess = unserialize($this->input->post('session'));
+        $data = unserialize($this->input->post('data'));
+        $result = $this->mang->update_flg($data,$sess);
+       
+        echo json_encode($result);
+    }
+
 }
 
 
