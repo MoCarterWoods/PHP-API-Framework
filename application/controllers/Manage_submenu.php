@@ -24,6 +24,14 @@ class Manage_submenu extends CI_Controller {
         echo json_encode($result);
     } 
 
+    public function insert_sub_menu(){
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+        $result = $this->mang->insert_sub_menu($data, $sess);
+        // echo "<pre>";
+        // print_r($result);
+        echo json_encode($result);
+    } 
 
     public function update_flg(){
         $sess = unserialize($this->input->post('session'));
@@ -33,6 +41,29 @@ class Manage_submenu extends CI_Controller {
         echo json_encode($result);
     }
 
+
+
+    public function show_show_smm(){
+        $data = $this->input->post();
+       
+        // $data = unserialize($this->input->post('data'));
+        $result = $this->mang->show_show_smm($data);
+        // echo "<pre>";
+        // print_r($result);
+        echo json_encode($result);
+    } 
+
+
+    public function edit_sub_menu(){
+
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+
+        $result = $this->mang->edit_sub_menu($data, $sess);
+        // echo "<pre>";
+        // print_r($result);
+        echo json_encode($result);
+    }
 }
 
 

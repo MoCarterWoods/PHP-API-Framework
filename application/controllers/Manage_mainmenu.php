@@ -55,4 +55,16 @@ class Manage_mainmenu extends CI_Controller {
         echo json_encode($result);
     }
 
+
+    public function edit_main_menu(){
+
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+
+        $result = $this->main->edit_main_menu($data, $sess);
+        // echo "<pre>";
+        // print_r($result);
+        echo json_encode($result);
+    }
+
 }
