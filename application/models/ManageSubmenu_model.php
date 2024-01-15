@@ -129,7 +129,7 @@ class ManageSubmenu_model extends CI_Model
         $checkEdit = $this->checkEditMainMenu($data);
 
         if (!$checkEdit) {
-            $sql = "UPDATE sys_sub_menu SET smm_name = '$mmname', smm_icon = '$mmicon', smm_order_no = '$ordno', smm_updated_date = NOW(), smm_updated_by = '$sess' WHERE smm_id = '$id'";
+            $sql = "UPDATE sys_sub_menu SET ssm_name = '$smname', ssm_controller = '$sscon', ssm_order_no = '$ordno', ssm_updated_date = NOW(), ssm_updated_by = '$sess' WHERE ssm_id = '$id'";
             $result = $this->db->query($sql);
 
             if ($this->db->affected_rows() > 0) {
@@ -171,18 +171,18 @@ class ManageSubmenu_model extends CI_Model
 
     public function orderNo($data)
     {
-        $id = $data["mmnId"];
+        $id = $data["subId"];
         $ordno = $data["OrderNo"];
 
-        $result = $this->db->query("SELECT smm_id,smm_order_no FROM sys_main_menu");
+        $result = $this->db->query("SELECT ssm_id,ssm_order_no FROM sys_sub_menu");
         $res = $result->result_array();
         $i = 1;
         $order = [];
 
         foreach ($res as $value) {
-            if ($value["smm_id"] != $id) {
+            if ($value["ssm_id"] != $id) {
                 $i = $i == $ordno ? ++$i : $i;
-                $result = $this->db->query("UPDATE sys_main_menu SET smm_order_no = '$i' WHERE smm_id = '{$value['smm_id']}'");
+                $result = $this->db->query("UPDATE sys_sub_menu SET ssm_order_no = '$i' WHERE ssm_id = '{$value['ssm_id']}'");
                 $i++;
         
                 // ตรวจสอบการอัปเดตข้อมูล
@@ -191,7 +191,7 @@ class ManageSubmenu_model extends CI_Model
                 }
             } else {
                 $order[] = [
-                    'id' => $value["smm_id"],
+                    'id' => $value["ssm_id"],
                     'order' => $ordno
                 ];
             }
