@@ -14,7 +14,7 @@ class ManageSubmenu_model extends CI_Model
 
     public function show_main_menu()
     {
-        $sql_show_main = "SELECT smm_id, smm_name FROM sys_main_menu";
+        $sql_show_main = "SELECT smm_id, smm_name FROM sys_main_menu WHERE smm_status_flg = 1";
         $query = $this->db->query($sql_show_main);
         $data = $query->result();
 

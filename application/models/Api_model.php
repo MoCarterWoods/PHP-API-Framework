@@ -20,9 +20,13 @@ class Api_model extends CI_Model {
         return $data;
     }
     public function get_menu() {
-        $sql = "SELECT sys_main_menu.smm_id, sys_main_menu.smm_name, sys_main_menu.smm_icon
-        , sys_main_menu.smm_order_no, sys_main_menu.smm_status_flg ,
-        sys_sub_menu.smm_id , sys_sub_menu.ssm_controller,
+        $sql = "SELECT sys_main_menu.smm_id, 
+        sys_main_menu.smm_name, 
+        sys_main_menu.smm_icon, 
+        sys_main_menu.smm_order_no, 
+        sys_main_menu.smm_status_flg ,
+        sys_sub_menu.smm_id , 
+        sys_sub_menu.ssm_controller,
         sys_sub_menu.ssm_name
         FROM sys_main_menu
         INNER JOIN sys_sub_menu

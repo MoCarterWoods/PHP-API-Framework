@@ -47,4 +47,14 @@ class Manage_permis_detail extends CI_Controller {
         echo json_encode($result);
     }
 
+
+    public function insert_permiss(){
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+        $result = $this->mang->insert_permiss($data, $sess);
+        // echo "<pre>";
+        // print_r($result);
+        echo json_encode($result);
+    } 
+
 }

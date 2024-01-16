@@ -89,4 +89,35 @@ class ManagePermis_Detail_model extends CI_Model {
 
         return $data;
     }
+
+
+    public function insert_permiss($data, $sess) {
+        $permisID = $data["PermisID"];
+        $menuGroup = $data["MenuGroup"];
+        $subMenu = $data["SubMenu"];
+    
+        $sql_check_duplicate = "SELECT * FROM sys_permission_detail WHERE spg_id = '$permisID' AND ssm_id = '$subMenu'";
+        $query_check_duplicate = $this->db->query($sql_check_duplicate);
+    
+        // ใช้ num_rows() เพื่อนับจำนวนแถวที่ถูกพบ
+        if ($query_check_duplicate->num_rows() > 0) {
+            return array('result' => 9); // มีข้อมูลซ้ำ
+        } else {
+            $sql_insert = "INSERT INTO sys_permission_detail 
+            (spg_id, 
+            ssm_id, 
+            spd_status_flg, 
+            spd_created_date, 
+            spd_created_by) 
+            VALUES ('$permisID ', '$subMenu', 1, NOW() , '$sess')";
+    
+            $query = $this->db->query($sql_insert);
+    
+            if ($this->db->affected_rows() > 0) {
+                return array('result' => 1); // Insert สำเร็จ
+            } else {
+                return array('result' => 0); // Insert ล้มเหลว
+            }
+        }
+    }
 }
