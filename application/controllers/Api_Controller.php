@@ -10,7 +10,8 @@ class Api_Controller extends CI_Controller {
     }
 
     public function show_Menu(){
-        $result = $this->apimd->get_menu();
+        $sess = unserialize($this->input->post('session'));
+        $result = $this->apimd->get_menu($sess);
         // echo "<pre>";
         // print_r($result);
         echo json_encode($result);

@@ -34,7 +34,7 @@ class ManagePermis_Detail_model extends CI_Model {
         sys_permission_detail.spd_status_flg,
         sys_permission_detail.spd_created_date,
         sys_permission_detail.spd_created_by,
-        COALESCE(sys_permission_detail.spd_updated_date, '-') AS spd_updated_date,
+        IFNULL(DATE_FORMAT(sys_permission_detail.spd_updated_date, '%Y-%m-%d'), '-') AS spd_updated_date,
     COALESCE(sys_permission_detail.spd_updated_by, '-') AS spd_updated_by,
         sys_sub_menu.ssm_name,
         sys_main_menu.smm_name
@@ -118,6 +118,35 @@ class ManagePermis_Detail_model extends CI_Model {
             } else {
                 return array('result' => 0); // Insert ล้มเหลว
             }
+        }
+    }
+
+
+    public function show_show_edit($data)
+    {
+        $id = $data["id"];
+
+
+        
+        $sql_show_edit = "SELECT 
+        sys_main_menu.smm_name,
+        sys_main_menu.smm_id,
+        sys_sub_menu.ssm_name,
+        sys_sub_menu.ssm_id
+         FROM sys_permission_detail
+        JOIN
+                sys_sub_menu ON sys_permission_detail.ssm_id = sys_sub_menu.ssm_id
+        JOIN
+                sys_main_menu ON sys_sub_menu.smm_id = sys_main_menu.smm_id
+            WHERE spd_id = '$id';";
+
+        $query = $this->db->query($sql_show_edit);
+        $data = $query->row();
+
+        if ($this->db->affected_rows() > 0) {
+            return array('result' => true, 'data' => $data);
+        } else {
+            return array('result' => false);
         }
     }
 }

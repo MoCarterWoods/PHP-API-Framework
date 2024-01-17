@@ -12,16 +12,17 @@ class Manage_model extends CI_Model {
 
     public function show_user() {
         $sql = "SELECT sys_account.sa_id, sys_account.sa_fristname, sys_account.sa_lastname
-        , sys_account.sa_emp_code, sys_account.spg_id , sys_account.sa_email ,sys_account.sa_created_date,sys_account.sa_status_flg ,
-        sys_permission_group.spg_name
-        FROM sys_account
-        INNER JOIN sys_permission_group
-        ON sys_account.spg_id = sys_permission_group.spg_id;";
-
+                , sys_account.sa_emp_code, sys_account.spg_id, sys_account.sa_email
+                , DATE_FORMAT(sys_account.sa_created_date, '%Y-%m-%d') AS sa_created_date
+                , sys_account.sa_status_flg, sys_permission_group.spg_name
+            FROM sys_account
+            INNER JOIN sys_permission_group ON sys_account.spg_id = sys_permission_group.spg_id;";
+    
         $query = $this->db->query($sql);
         $data = $query->result();
         return $data;
     }
+    
 
     public function show_drop_down() {
     $sql1 = "SELECT spg_id,spg_name From sys_permission_group";
