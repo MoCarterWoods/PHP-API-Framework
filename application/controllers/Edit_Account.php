@@ -26,3 +26,13 @@ class Edit_Account extends CI_Controller {
         echo json_encode($result);
     }
 }
+
+
+
+
+
+
+
+
+
+

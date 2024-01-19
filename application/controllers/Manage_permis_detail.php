@@ -34,14 +34,16 @@ class Manage_permis_detail extends CI_Controller {
     }
 
     public function drop_main (){
-        $result = $this->mang->drop_main();
+        $data = unserialize($this->input->post('data'));
+        $result = $this->mang->drop_main($data);
         // echo "<pre>";
         // print_r($result);
         echo json_encode($result);
     }
     
     public function drop_sub (){
-        $result = $this->mang->drop_sub();
+        $data = unserialize($this->input->post('data'));
+        $result = $this->mang->drop_sub($data);
         // echo "<pre>";
         // print_r($result);
         echo json_encode($result);

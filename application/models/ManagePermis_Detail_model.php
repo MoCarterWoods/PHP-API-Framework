@@ -73,17 +73,31 @@ class ManagePermis_Detail_model extends CI_Model {
     }
 
 
-    public function drop_main()
+    public function drop_main($data)
     {
-        $sql_main_menu = "SELECT smm_id, smm_name FROM sys_main_menu";
+        $perid = $data["permisId"];
+
+        $sql_main_menu = "SELECT DISTINCT sys_main_menu.smm_id, sys_main_menu.smm_name
+        FROM sys_main_menu
+        LEFT JOIN sys_sub_menu ON sys_sub_menu.smm_id = sys_main_menu.smm_id
+        LEFT JOIN sys_permission_detail ON sys_sub_menu.ssm_id = sys_permission_detail.ssm_id AND sys_permission_detail.spg_id = '$perid'
+        WHERE sys_permission_detail.ssm_id IS NULL;";
         $query = $this->db->query($sql_main_menu);
         $data = $query->result();
 
         return $data;
     }
-    public function drop_sub()
+    public function drop_sub($data)
     {
-        $sql_sub_menu = "SELECT ssm_id, ssm_name FROM sys_sub_menu";
+        $perid = $data["permisId"];
+
+
+
+        $sql_sub_menu = "SELECT DISTINCT sys_sub_menu.ssm_id, sys_sub_menu.ssm_name
+        FROM sys_sub_menu
+        LEFT JOIN sys_main_menu ON sys_main_menu.smm_id = sys_sub_menu.smm_id
+        LEFT JOIN sys_permission_detail ON sys_sub_menu.ssm_id = sys_permission_detail.ssm_id AND sys_permission_detail.spg_id = '$perid'
+        WHERE sys_permission_detail.ssm_id IS NULL;";
         $query = $this->db->query($sql_sub_menu);
         $data = $query->result();
 
@@ -96,13 +110,28 @@ class ManagePermis_Detail_model extends CI_Model {
         $menuGroup = $data["MenuGroup"];
         $subMenu = $data["SubMenu"];
     
+        // Check if data exists in sys_sub_menu for the given condition
+        $sql_check_sub_menu = "SELECT ssm_id 
+                                FROM sys_sub_menu 
+                                LEFT JOIN sys_main_menu ON sys_main_menu.smm_id = sys_sub_menu.smm_id  
+                                WHERE sys_main_menu.smm_id = '$menuGroup'";
+    
+        $query_check_sub_menu = $this->db->query($sql_check_sub_menu);
+    
+        // If no data exists, return an error result
+        if ($query_check_sub_menu->num_rows() == 0) {
+            return array('result' => 2); // No data found in sys_sub_menu
+        }
+    
+        // Check for duplicate entries in the sys_permission_detail table
         $sql_check_duplicate = "SELECT * FROM sys_permission_detail WHERE spg_id = '$permisID' AND ssm_id = '$subMenu'";
         $query_check_duplicate = $this->db->query($sql_check_duplicate);
     
-        // ใช้ num_rows() เพื่อนับจำนวนแถวที่ถูกพบ
+        // If duplicate entries are found, return an error result
         if ($query_check_duplicate->num_rows() > 0) {
-            return array('result' => 9); // มีข้อมูลซ้ำ
+            return array('result' => 9); // Duplicate data found
         } else {
+            // If no duplicate entries are found, insert a new record
             $sql_insert = "INSERT INTO sys_permission_detail 
             (spg_id, 
             ssm_id, 
@@ -113,13 +142,15 @@ class ManagePermis_Detail_model extends CI_Model {
     
             $query = $this->db->query($sql_insert);
     
+            // Check if the insert operation was successful
             if ($this->db->affected_rows() > 0) {
-                return array('result' => 1); // Insert สำเร็จ
+                return array('result' => 1); // Successful insert
             } else {
-                return array('result' => 0); // Insert ล้มเหลว
+                return array('result' => 0); // Failed insert
             }
         }
     }
+    
 
 
     public function show_show_edit($data)
