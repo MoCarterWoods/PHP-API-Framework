@@ -90,14 +90,18 @@ class ManagePermis_Detail_model extends CI_Model {
     public function drop_sub($data)
     {
         $perid = $data["permisId"];
+        $mainid = $data["mainId"];
 
 
 
-        $sql_sub_menu = "SELECT DISTINCT sys_sub_menu.ssm_id, sys_sub_menu.ssm_name
-        FROM sys_sub_menu
-        LEFT JOIN sys_main_menu ON sys_main_menu.smm_id = sys_sub_menu.smm_id
-        LEFT JOIN sys_permission_detail ON sys_sub_menu.ssm_id = sys_permission_detail.ssm_id AND sys_permission_detail.spg_id = '$perid'
-        WHERE sys_permission_detail.ssm_id IS NULL;";
+        $sql_sub_menu = "SELECT 
+        sys_sub_menu.ssm_id,
+        sys_sub_menu.ssm_name
+    FROM sys_sub_menu
+    LEFT JOIN sys_permission_detail ON sys_sub_menu.ssm_id = sys_permission_detail.ssm_id AND sys_permission_detail.spg_id = '$perid'
+    WHERE sys_sub_menu.smm_id = '$mainid'
+        AND sys_permission_detail.ssm_id IS NULL;
+    ";
         $query = $this->db->query($sql_sub_menu);
         $data = $query->result();
 
