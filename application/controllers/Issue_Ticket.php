@@ -39,4 +39,18 @@ class Issue_Ticket extends CI_Controller {
 
         echo json_encode($result);
     } 
+
+
+
+    public function upload_file() {
+    $targetDirectory = '127.0.0.1/ticket/assets/img/ProblemCondition/';
+    $targetFile = $targetDirectory . basename($_FILES['file']['name']);
+
+    if (move_uploaded_file($_FILES['file']['tmp_name'], $targetFile)) {
+    echo 'File uploaded successfully.';
+    } else {
+    echo 'Error uploading file.';
+    }
+    }
+
 }

@@ -78,4 +78,6 @@ class Issue_Ticket_model extends CI_Model {
         return $data;
     }
 
+
+    
 }
