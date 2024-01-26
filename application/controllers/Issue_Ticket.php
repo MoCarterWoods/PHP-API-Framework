@@ -53,4 +53,15 @@ class Issue_Ticket extends CI_Controller {
     }
     }
 
+
+    public function save_issue(){
+
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+
+        $result = $this->iss->save_issue($data, $sess);
+        // echo "<pre>";
+        // print_r($result);
+        echo json_encode($result);
+    }
 }

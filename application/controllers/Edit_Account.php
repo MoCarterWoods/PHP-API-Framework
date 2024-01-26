@@ -25,6 +25,14 @@ class Edit_Account extends CI_Controller {
         // print_r($result);
         echo json_encode($result);
     }
+    public function update_pass(){
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+        $result = $this->edit->update_pass($data, $sess);
+        // echo "<pre>";
+        // print_r($result);
+        echo json_encode($result);
+    }
 }
 
 
