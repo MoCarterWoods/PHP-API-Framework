@@ -65,19 +65,27 @@ class EditAccount_model extends CI_Model {
     public function update_pass($data, $sess) {
         $currpass = md5($data["CurrPass"]);
         $newpass = md5($data["ConNewPass"]);
-
-
+    
+        // เพิ่มเงื่อนไขการตรวจสอบรหัสผ่านเดิม
+        $sql_check_pass = "SELECT COUNT(*) AS pass_count FROM sys_account WHERE sa_emp_code = '$sess' AND sa_emp_password = '$currpass'";
+        $query_check_pass = $this->db->query($sql_check_pass);
+        $result_check_pass = $query_check_pass->row();
+    
+        if ($result_check_pass->pass_count == 0) {
+            // รหัสผ่านเดิมไม่ตรงกับที่มีในฐานข้อมูล
+            return array('result' => 0, 'message' => 'Invalid Current Password');
+        }
     
         $sql_update = "UPDATE sys_account SET sa_emp_password = '$newpass' WHERE sa_emp_code = '$sess' AND sa_emp_password = '$currpass'";
         $query_update = $this->db->query($sql_update);
-
+    
         if ($this->db->affected_rows() > 0) {
             // อัปเดตสำเร็จ
-        return array('result' => 1);
+            return array('result' => 1);
         } else {
             // อัปเดตไม่สำเร็จ
-        return array('result' => 0, 'message' => 'Invalid Current Password');
+            return array('result' => 0, 'message' => 'Failed to update password');
         }
-    
     }
+    
 }

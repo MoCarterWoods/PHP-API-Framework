@@ -106,13 +106,32 @@ class Issue_Ticket_model extends CI_Model {
     $troublepic2 = $data["TroublePic2"];
     $troublepic3 = $data["TroublePic3"];
 
-    $troublepic3 = $data["DetailAnalyze"];
-    $troublepic3 = $data["analyzeCheckval1"];
-    $troublepic3 = $data["analyzeCheckval2"];
-    $troublepic3 = $data["analyzeCheckval3"];
-    $troublepic3 = $data["analyzeCheckval4"];
-    $troublepic3 = $data["analyzeCheckval5"];
-    $troublepic3 = $data["analyzeCheckval6"];
+    $deliverydetail = $data["Detaildelivery"];
+    $deliveryCheckval1 = $data["deliveryCheckval1"];
+    $deliveryCheckval2 = $data["deliveryCheckval2"];
+    $deliveryCheckval3 = $data["deliveryCheckval3"];
+    $deliveryCheckval4 = $data["deliveryCheckval4"];
+    $deliveryCheckval5 = $data["deliveryCheckval5"];
+    $deliveryCheckval6 = $data["deliveryCheckval6"];
+
+
+    $analyzdetail = $data["AnalyzDetail"];
+    $analyzpic1 = $data["AnalyzPic1"];
+    $analyzpic2 = $data["AnalyzPic2"];
+    $analyzpic3 = $data["AnalyzPic3"];
+    $analyzcheck1 = $data["Checkval1"];
+    $analyzcheck2 = $data["Checkval2"];
+    $analyzcheck3 = $data["Checkval3"];
+    $analyzcheck4 = $data["Checkval4"];
+    $analyzcheck5 = $data["Checkval5"];
+    $analyzcheck6 = $data["Checkval6"];
+    $analyzcheck7 = $data["Checkval7"];
+    $analyzcheck8 = $data["Checkval8"];
+    $analyzcheck9 = $data["Checkval9"];
+    $analyzcheck10 = $data["Checkval10"];
+    $analyzcheck11 = $data["Checkval11"];
+
+
 
     $sql_insert_issue_ticket = "INSERT INTO info_issue_ticket (
         ist_type,
@@ -177,6 +196,147 @@ class Issue_Ticket_model extends CI_Model {
             ) VALUES ('$ist_id','$trouble','$troubledetail','$troublepic1','$troublepic2','$troublepic3','it_path',1,NOW(),'$sess')";
 
             $query_insert_troubleshooting = $this->db->query($sql_insert_troubleshooting);
+
+
+            if ($deliveryCheckval1 !== '') {
+                $sql_insert_delivery_1 = "INSERT INTO info_delivery_equipment (
+                    ist_id,
+                    mde_id,
+                    ide_detail,
+                    ide_status_flg,
+                    ide_created_date,
+                    ide_created_by)
+                    VALUES ('$ist_id','$deliveryCheckval1','$deliverydetail',1,NOW(),'$sess')";
+            
+                $query_insert_delivery_1 = $this->db->query($sql_insert_delivery_1);
+            
+                if ($this->db->affected_rows() > 0) {
+                    // เพิ่มข้อมูลสำเร็จ
+                    // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                } else {
+                    // ไม่สามารถเพิ่มข้อมูลได้
+                }
+            }
+            
+            // เพิ่ม query INSERT สำหรับ $deliveryCheckval2
+            if ($deliveryCheckval2 !== '') {
+                $sql_insert_delivery_2 = "INSERT INTO info_delivery_equipment (
+                    ist_id,
+                    mde_id,
+                    ide_status_flg,
+                    ide_created_date,
+                    ide_created_by)
+                    VALUES ('$ist_id','$deliveryCheckval2',1,NOW(),'$sess')";
+            
+                $query_insert_delivery_2 = $this->db->query($sql_insert_delivery_2);
+            
+                if ($this->db->affected_rows() > 0) {
+                    // เพิ่มข้อมูลสำเร็จ
+                    // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                } else {
+                    // ไม่สามารถเพิ่มข้อมูลได้
+                }
+            }
+            if ($deliveryCheckval3 !== '') {
+                $sql_insert_delivery_3 = "INSERT INTO info_delivery_equipment (
+                    ist_id,
+                    mde_id,
+                    ide_status_flg,
+                    ide_created_date,
+                    ide_created_by)
+                    VALUES ('$ist_id','$deliveryCheckval3',1,NOW(),'$sess')";
+            
+                $query_insert_delivery_3 = $this->db->query($sql_insert_delivery_3);
+            
+                if ($this->db->affected_rows() > 0) {
+                    // เพิ่มข้อมูลสำเร็จ
+                    // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                } else {
+                    // ไม่สามารถเพิ่มข้อมูลได้
+                }
+            }
+            if ($deliveryCheckval4 !== '') {
+                $sql_insert_delivery_4 = "INSERT INTO info_delivery_equipment (
+                    ist_id,
+                    mde_id,
+                    ide_status_flg,
+                    ide_created_date,
+                    ide_created_by)
+                    VALUES ('$ist_id','$deliveryCheckval4',1,NOW(),'$sess')";
+            
+                $query_insert_delivery_4 = $this->db->query($sql_insert_delivery_4);
+            
+                if ($this->db->affected_rows() > 0) {
+                    // เพิ่มข้อมูลสำเร็จ
+                    // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                } else {
+                    // ไม่สามารถเพิ่มข้อมูลได้
+                }
+            }
+            if ($deliveryCheckval5 !== '') {
+                $sql_insert_delivery_5 = "INSERT INTO info_delivery_equipment (
+                    ist_id,
+                    mde_id,
+                    ide_status_flg,
+                    ide_created_date,
+                    ide_created_by)
+                    VALUES ('$ist_id','$deliveryCheckval5',1,NOW(),'$sess')";
+            
+                $query_insert_delivery_5 = $this->db->query($sql_insert_delivery_5);
+            
+                if ($this->db->affected_rows() > 0) {
+                    // เพิ่มข้อมูลสำเร็จ
+                    // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                } else {
+                    // ไม่สามารถเพิ่มข้อมูลได้
+                }
+            }
+            if ($deliveryCheckval6 !== '') {
+                $sql_insert_delivery_6 = "INSERT INTO info_delivery_equipment (
+                    ist_id,
+                    mde_id,
+                    ide_status_flg,
+                    ide_created_date,
+                    ide_created_by)
+                    VALUES ('$ist_id','$deliveryCheckval6',1,NOW(),'$sess')";
+            
+                $query_insert_delivery_6 = $this->db->query($sql_insert_delivery_6);
+            
+                if ($this->db->affected_rows() > 0) {
+                    // เพิ่มข้อมูลสำเร็จ
+                    // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                } else {
+                    // ไม่สามารถเพิ่มข้อมูลได้
+                }
+            }
+
+            if ($analyzdetail !== '') {
+                $sql_insert_analyzdetail = "INSERT INTO info_analyze_problem (
+                    ist_id,
+                    iap_detail,
+                    iap_pic1,
+                    iap_pic2,
+                    iap_pic3,
+                    iap_path,
+                    iap_status_flg,
+                    iap_created_date,
+                    iap_created_by
+                    ) VALUES ('$ist_id','$analyzdetail','$analyzpic1','$analyzpic2','$analyzpic3','iap_path',1,NOW(),'$sess')";
+            
+                $query_insert_analyzdetail = $this->db->query($sql_insert_analyzdetail);
+            
+                if ($this->db->affected_rows() > 0) {
+                    // เพิ่มข้อมูลสำเร็จ
+                    // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                } else {
+                    // ไม่สามารถเพิ่มข้อมูลได้
+                }
+            }
+            
+            
+            
+
+
 
             if ($this->db->affected_rows() > 0) {
                 // INSERT INTO info_inspection_method
