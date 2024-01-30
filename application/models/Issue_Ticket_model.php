@@ -130,6 +130,7 @@ class Issue_Ticket_model extends CI_Model {
     $analyzcheck9 = $data["Checkval9"];
     $analyzcheck10 = $data["Checkval10"];
     $analyzcheck11 = $data["Checkval11"];
+    $detailcheck11 = $data["Detailcheck11"];
 
 
 
@@ -310,7 +311,6 @@ class Issue_Ticket_model extends CI_Model {
                 }
             }
 
-            if ($analyzdetail !== '') {
                 $sql_insert_analyzdetail = "INSERT INTO info_analyze_problem (
                     ist_id,
                     iap_detail,
@@ -325,13 +325,207 @@ class Issue_Ticket_model extends CI_Model {
             
                 $query_insert_analyzdetail = $this->db->query($sql_insert_analyzdetail);
             
-                if ($this->db->affected_rows() > 0) {
-                    // เพิ่มข้อมูลสำเร็จ
-                    // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                } else {
-                    // ไม่สามารถเพิ่มข้อมูลได้
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                if ($analyzcheck1 !== '') {
+                    $sql_insert_analyzcheck1 = "INSERT INTO info_analyze_problem (
+                        ist_id,
+                        map_id,
+                        iap_status_flg,
+                        iap_created_date,
+                        iap_created_by
+                        ) VALUES ('$ist_id',$analyzcheck1,1,NOW(),'$sess')";
+                
+                    $query_insert_analyzcheck1 = $this->db->query($sql_insert_analyzcheck1);
+                
+                    if ($this->db->affected_rows() > 0) {
+
+                    } else {
+
+                    }
                 }
-            }
+
+                if ($analyzcheck2 !== '') {
+                    $sql_insert_analyzcheck2 = "INSERT INTO info_analyze_problem (
+                        ist_id,
+                        map_id,
+                        iap_status_flg,
+                        iap_created_date,
+                        iap_created_by
+                        ) VALUES ('$ist_id',$analyzcheck2,1,NOW(),'$sess')";
+                
+                    $query_insert_analyzcheck2 = $this->db->query($sql_insert_analyzcheck2);
+                
+                    if ($this->db->affected_rows() > 0) {
+
+                    } else {
+
+                    }
+                }
+
+                if ($analyzcheck3 !== '') {
+                    $sql_insert_analyzcheck3 = "INSERT INTO info_analyze_problem (
+                        ist_id,
+                        map_id,
+                        iap_status_flg,
+                        iap_created_date,
+                        iap_created_by
+                        ) VALUES ('$ist_id',$analyzcheck3,1,NOW(),'$sess')";
+                
+                    $query_insert_analyzcheck3 = $this->db->query($sql_insert_analyzcheck3);
+                
+                    if ($this->db->affected_rows() > 0) {
+
+                    } else {
+
+                    }
+                }
+
+                if ($analyzcheck4 !== '') {
+                    $sql_insert_analyzcheck4 = "INSERT INTO info_analyze_problem (
+                        ist_id,
+                        map_id,
+                        iap_status_flg,
+                        iap_created_date,
+                        iap_created_by
+                        ) VALUES ('$ist_id',$analyzcheck4,1,NOW(),'$sess')";
+                
+                    $query_insert_analyzcheck4 = $this->db->query($sql_insert_analyzcheck4);
+                
+                    if ($this->db->affected_rows() > 0) {
+
+                    } else {
+
+                    }
+                }
+
+                if ($analyzcheck5 !== '') {
+                    $sql_insert_analyzcheck5 = "INSERT INTO info_analyze_problem (
+                        ist_id,
+                        map_id,
+                        iap_status_flg,
+                        iap_created_date,
+                        iap_created_by
+                        ) VALUES ('$ist_id',$analyzcheck5,1,NOW(),'$sess')";
+                
+                    $query_insert_analyzcheck5 = $this->db->query($sql_insert_analyzcheck5);
+                
+                    if ($this->db->affected_rows() > 0) {
+
+                    } else {
+
+                    }
+                }
+
+                if ($analyzcheck6 !== '') {
+                    $sql_insert_analyzcheck6 = "INSERT INTO info_analyze_problem (
+                        ist_id,
+                        map_id,
+                        iap_status_flg,
+                        iap_created_date,
+                        iap_created_by
+                        ) VALUES ('$ist_id',$analyzcheck6,1,NOW(),'$sess')";
+                
+                    $query_insert_analyzcheck6 = $this->db->query($sql_insert_analyzcheck6);
+                
+                    if ($this->db->affected_rows() > 0) {
+
+                    } else {
+
+                    }
+                }
+
+                if ($analyzcheck7 !== '') {
+                    $sql_insert_analyzcheck7 = "INSERT INTO info_analyze_problem (
+                        ist_id,
+                        map_id,
+                        iap_status_flg,
+                        iap_created_date,
+                        iap_created_by
+                        ) VALUES ('$ist_id',$analyzcheck7,1,NOW(),'$sess')";
+                
+                    $query_insert_analyzcheck7 = $this->db->query($sql_insert_analyzcheck7);
+                
+                    if ($this->db->affected_rows() > 0) {
+
+                    } else {
+
+                    }
+                }
+
+                if ($analyzcheck8 !== '') {
+                    $sql_insert_analyzcheck8 = "INSERT INTO info_analyze_problem (
+                        ist_id,
+                        map_id,
+                        iap_status_flg,
+                        iap_created_date,
+                        iap_created_by
+                        ) VALUES ('$ist_id',$analyzcheck8,1,NOW(),'$sess')";
+                
+                    $query_insert_analyzcheck8 = $this->db->query($sql_insert_analyzcheck8);
+                
+                    if ($this->db->affected_rows() > 0) {
+
+                    } else {
+
+                    }
+                }
+
+                if ($analyzcheck9 !== '') {
+                    $sql_insert_analyzcheck9 = "INSERT INTO info_analyze_problem (
+                        ist_id,
+                        map_id,
+                        iap_status_flg,
+                        iap_created_date,
+                        iap_created_by
+                        ) VALUES ('$ist_id',$analyzcheck9,1,NOW(),'$sess')";
+                
+                    $query_insert_analyzcheck9 = $this->db->query($sql_insert_analyzcheck9);
+                
+                    if ($this->db->affected_rows() > 0) {
+
+                    } else {
+
+                    }
+                }
+
+                if ($analyzcheck10 !== '') {
+                    $sql_insert_analyzcheck10 = "INSERT INTO info_analyze_problem (
+                        ist_id,
+                        map_id,
+                        iap_status_flg,
+                        iap_created_date,
+                        iap_created_by
+                        ) VALUES ('$ist_id',$analyzcheck10,1,NOW(),'$sess')";
+                
+                    $query_insert_analyzcheck10 = $this->db->query($sql_insert_analyzcheck10);
+                
+                    if ($this->db->affected_rows() > 0) {
+
+                    } else {
+
+                    }
+                }
+
+                if ($analyzcheck11 !== '') {
+                    $sql_insert_analyzcheck11 = "INSERT INTO info_analyze_problem (
+                        ist_id,
+                        map_id,
+                        iap_detail,
+                        iap_status_flg,
+                        iap_created_date,
+                        iap_created_by
+                        ) VALUES ('$ist_id',$analyzcheck11,'$detailcheck11',1,NOW(),'$sess')";
+                
+                    $query_insert_analyzcheck11 = $this->db->query($sql_insert_analyzcheck11);
+                
+                    if ($this->db->affected_rows() > 0) {
+
+                    } else {
+
+                    }
+                }
+
+                
             
             
             
