@@ -107,30 +107,62 @@ class Issue_Ticket_model extends CI_Model
         $troublepic2 = $data["TroublePic2"];
         $troublepic3 = $data["TroublePic3"];
 
-        for ($i = 1; $i <= 5; $i++) {
-            $Rqname = "Rqname{$i}";
-            $Rqmaker = "Rqmaker{$i}";
-            $Rqmodel = "Rqmodel{$i}";
-            $Rqqty = "Rqqty{$i}";
-            $RqstockDate = "RqstockDate{$i}";
-            $RqstockQuantity = "RqstockQuantity{$i}";
-            $RqorderDate = "RqorderDate{$i}";
-            $RqorderQuantity = "RqorderQuantity{$i}";
-            $RqreceivedDate = "RqreceivedDate{$i}";
-            $RqreceivedQuantity = "RqreceivedQuantity{$i}";
 
-            ${$Rqname} = isset($data[$Rqname]) ? $data[$Rqname] : '';
-            ${$Rqmaker} = isset($data[$Rqmaker]) ? $data[$Rqmaker] : '';
-            ${$Rqmodel} = isset($data[$Rqmodel]) ? $data[$Rqmodel] : '';
-            ${$Rqqty} = isset($data[$Rqqty]) ? $data[$Rqqty] : '';
-            ${$RqstockDate} = isset($data[$RqstockDate]) ? $data[$RqstockDate] : '';
-            ${$RqstockQuantity} = isset($data[$RqstockQuantity]) ? $data[$RqstockQuantity] : '';
-            ${$RqorderDate} = isset($data[$RqorderDate]) ? $data[$RqorderDate] : '';
-            ${$RqorderQuantity} = isset($data[$RqorderQuantity]) ? $data[$RqorderQuantity] : '';
-            ${$RqreceivedDate} = isset($data[$RqreceivedDate]) ? $data[$RqreceivedDate] : '';
-            ${$RqreceivedQuantity} = isset($data[$RqreceivedQuantity]) ? $data[$RqreceivedQuantity] : '';
-            
-        }
+        $RqrqName1 = $data["rqName1"];
+        $RqrqMaker1 = $data["rqMaker1"];
+        $RqrqModel1 = $data["rqModel1"];
+        $RqrqQty1 = $data["rqQty1"];
+        $RqrqStockDate1 = $data["rqStockDate1"];
+        $RqrqStockQuantity1 = $data["rqStockQuantity1"];
+        $RqrqOrderDate1 = $data["rqOrderDate1"];
+        $RqrqOrderQuantity1 = $data["rqOrderQuantity1"];
+        $RqrqReceivedDate1 = $data["rqReceivedDate1"];
+        $RqrqReceivedQuantity1 = $data["rqReceivedQuantity1"];
+        
+
+        $RqrqName2 = $data["rqName2"];
+        $RqrqMaker2 = $data["rqMaker2"];
+        $RqrqModel2 = $data["rqModel2"];
+        $RqrqQty2 = $data["rqQty2"];
+        $RqrqStockDate2 = $data["rqStockDate2"];
+        $RqrqStockQuantity2 = $data["rqStockQuantity2"];
+        $RqrqOrderDate2 = $data["rqOrderDate2"];
+        $RqrqOrderQuantity2 = $data["rqOrderQuantity2"];
+        $RqrqReceivedDate2 = $data["rqReceivedDate2"];
+        $RqrqReceivedQuantity2 = $data["rqReceivedQuantity2"];
+
+        $RqrqName3 = $data["rqName3"];
+        $RqrqMaker3 = $data["rqMaker3"];
+        $RqrqModel3 = $data["rqModel3"];
+        $RqrqQty3 = $data["rqQty3"];
+        $RqrqStockDate3 = $data["rqStockDate3"];
+        $RqrqStockQuantity3 = $data["rqStockQuantity3"];
+        $RqrqOrderDate3 = $data["rqOrderDate3"];
+        $RqrqOrderQuantity3 = $data["rqOrderQuantity3"];
+        $RqrqReceivedDate3 = $data["rqReceivedDate3"];
+        $RqrqReceivedQuantity3 = $data["rqReceivedQuantity3"];
+
+        $RqrqName4 = $data["rqName4"];
+        $RqrqMaker4 = $data["rqMaker4"];
+        $RqrqModel4 = $data["rqModel4"];
+        $RqrqQty4 = $data["rqQty4"];
+        $RqrqStockDate4 = $data["rqStockDate4"];
+        $RqrqStockQuantity4 = $data["rqStockQuantity4"];
+        $RqrqOrderDate4 = $data["rqOrderDate4"];
+        $RqrqOrderQuantity4 = $data["rqOrderQuantity4"];
+        $RqrqReceivedDate4 = $data["rqReceivedDate4"];
+        $RqrqReceivedQuantity4 = $data["rqReceivedQuantity4"];
+
+        $RqrqName5 = $data["rqName5"];
+        $RqrqMaker5 = $data["rqMaker5"];
+        $RqrqModel5 = $data["rqModel5"];
+        $RqrqQty5 = $data["rqQty5"];
+        $RqrqStockDate5 = $data["rqStockDate5"];
+        $RqrqStockQuantity5 = $data["rqStockQuantity5"];
+        $RqrqOrderDate5 = $data["rqOrderDate5"];
+        $RqrqOrderQuantity5 = $data["rqOrderQuantity5"];
+        $RqrqReceivedDate5 = $data["rqReceivedDate5"];
+        $RqrqReceivedQuantity5 = $data["rqReceivedQuantity5"];
 
 
 
@@ -356,49 +388,9 @@ class Issue_Ticket_model extends CI_Model
                 $query_insert_analyzdetail = $this->db->query($sql_insert_analyzdetail);
 
 
-                if (${$Rqname} !== '') {
-                    // Build the SQL query
-                    $sql_insert = "INSERT INTO info_required_parts (
-                        ist_id,
-                        irp_name,
-                        irp_maker,
-                        irp_model,
-                        irp_qty,
-                        irp_withdraw_time,
-                        irp_withdraw_qty,
-                        irp_order_time,
-                        irp_order_qty,
-                        irp_received_time,
-                        irp_received_qty,
-                        irp_status_flg,
-                        irp_created_date,
-                        irp_created_by
-                    ) VALUES ('$ist_id', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, NOW(), '$sess')";
-                
-                    // Prepare the statement
-                    $stmt = $this->db->prepare($sql_insert);
-                
-                    // Bind parameters
-                    $stmt->bind_param('ssssssssss', ${$Rqname}, ${$Rqmaker}, ${$Rqmodel}, ${$Rqqty}, ${$RqstockDate}, ${$RqstockQuantity}, ${$RqorderDate}, ${$RqorderQuantity}, ${$RqreceivedDate}, ${$RqreceivedQuantity});
-                
-                    // Execute the query
-                    $stmt->execute();
-                
-                    // Check if the query was successful
-                    if ($stmt->affected_rows > 0) {
-                        // Do something if successful
-                    } else {
-                        // Do something if unsuccessful
-                        echo "Error: " . $stmt->error;
-                    }
-                
-                    // Close the statement
-                    $stmt->close();
-                }
+
                 
 
-
-                // ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                 if ($analyzcheck1 !== '') {
                     $sql_insert_analyzcheck1 = "INSERT INTO info_analyze_problem (
                         ist_id,
@@ -579,7 +571,130 @@ class Issue_Ticket_model extends CI_Model
 
 
 
+                if ($RqrqName1 !== '') {
+                    $sql_insert_rqp1 = "INSERT INTO info_required_parts (
+                        ist_id,
+                        irp_name,
+                        irp_maker,
+                        irp_model,
+                        irp_qty,
+                        irp_withdraw_time,
+                        irp_withdraw_qty,
+                        irp_order_time,
+                        irp_order_qty,
+                        irp_received_time,
+                        irp_received_qty,
+                        irp_status_flg,
+                        irp_created_date,
+                        irp_created_by
+                    ) VALUES ('$ist_id','$RqrqName1','$RqrqMaker1','$RqrqModel1','$RqrqQty1','$RqrqStockDate1','$RqrqStockQuantity1','$RqrqOrderDate1','$RqrqOrderQuantity1','$RqrqReceivedDate1','$RqrqReceivedQuantity1' ,1,NOW(),'$sess')";
 
+                    $query_insert_reqp1 = $this->db->query($sql_insert_rqp1);
+
+                    if ($this->db->affected_rows() > 0) {
+                    } else {
+                    }
+                }
+
+                if ($RqrqName2 !== '') {
+                    $sql_insert_rqp2 = "INSERT INTO info_required_parts (
+                        ist_id,
+                        irp_name,
+                        irp_maker,
+                        irp_model,
+                        irp_qty,
+                        irp_withdraw_time,
+                        irp_withdraw_qty,
+                        irp_order_time,
+                        irp_order_qty,
+                        irp_received_time,
+                        irp_received_qty,
+                        irp_status_flg,
+                        irp_created_date,
+                        irp_created_by
+                    ) VALUES ('$ist_id','$RqrqName2','$RqrqMaker2','$RqrqModel2','$RqrqQty2','$RqrqStockDate2','$RqrqStockQuantity2','$RqrqOrderDate2','$RqrqOrderQuantity2','$RqrqReceivedDate2','$RqrqReceivedQuantity2' ,1,NOW(),'$sess')";
+
+                    $query_insert_reqp2 = $this->db->query($sql_insert_rqp2);
+
+                    if ($this->db->affected_rows() > 0) {
+                    } else {
+                    }
+                }
+
+                if ($RqrqName3 !== '') {
+                    $sql_insert_rqp3 = "INSERT INTO info_required_parts (
+                        ist_id,
+                        irp_name,
+                        irp_maker,
+                        irp_model,
+                        irp_qty,
+                        irp_withdraw_time,
+                        irp_withdraw_qty,
+                        irp_order_time,
+                        irp_order_qty,
+                        irp_received_time,
+                        irp_received_qty,
+                        irp_status_flg,
+                        irp_created_date,
+                        irp_created_by
+                    ) VALUES ('$ist_id','$RqrqName3','$RqrqMaker3','$RqrqModel3','$RqrqQty3','$RqrqStockDate3','$RqrqStockQuantity3','$RqrqOrderDate3','$RqrqOrderQuantity3','$RqrqReceivedDate3','$RqrqReceivedQuantity3' ,1,NOW(),'$sess')";
+
+                    $query_insert_reqp3 = $this->db->query($sql_insert_rqp3);
+
+                    if ($this->db->affected_rows() > 0) {
+                    } else {
+                    }
+                }
+
+                if ($RqrqName4 !== '') {
+                    $sql_insert_rqp4 = "INSERT INTO info_required_parts (
+                        ist_id,
+                        irp_name,
+                        irp_maker,
+                        irp_model,
+                        irp_qty,
+                        irp_withdraw_time,
+                        irp_withdraw_qty,
+                        irp_order_time,
+                        irp_order_qty,
+                        irp_received_time,
+                        irp_received_qty,
+                        irp_status_flg,
+                        irp_created_date,
+                        irp_created_by
+                    ) VALUES ('$ist_id','$RqrqName4','$RqrqMaker4','$RqrqModel4','$RqrqQty4','$RqrqStockDate4','$RqrqStockQuantity4','$RqrqOrderDate4','$RqrqOrderQuantity4','$RqrqReceivedDate4','$RqrqReceivedQuantity4' ,1,NOW(),'$sess')";
+
+                    $query_insert_reqp4 = $this->db->query($sql_insert_rqp4);
+
+                    if ($this->db->affected_rows() > 0) {
+                    } else {
+                    }
+                }
+
+                if ($RqrqName5 !== '') {
+                    $sql_insert_rqp5 = "INSERT INTO info_required_parts (
+                        ist_id,
+                        irp_name,
+                        irp_maker,
+                        irp_model,
+                        irp_qty,
+                        irp_withdraw_time,
+                        irp_withdraw_qty,
+                        irp_order_time,
+                        irp_order_qty,
+                        irp_received_time,
+                        irp_received_qty,
+                        irp_status_flg,
+                        irp_created_date,
+                        irp_created_by
+                    ) VALUES ('$ist_id','$RqrqName5','$RqrqMaker5','$RqrqModel5','$RqrqQty5','$RqrqStockDate5','$RqrqStockQuantity5','$RqrqOrderDate5','$RqrqOrderQuantity5','$RqrqReceivedDate5','$RqrqReceivedQuantity5' ,1,NOW(),'$sess')";
+
+                    $query_insert_reqp5 = $this->db->query($sql_insert_rqp5);
+
+                    if ($this->db->affected_rows() > 0) {
+                    } else {
+                    }
+                }
 
 
 
