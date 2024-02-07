@@ -113,6 +113,7 @@ class Manage_model extends CI_Model {
 
 
 public function update_flg($data,$sess){
+
     $stFlg = $data["newStatus"];
     $saId = $data["saId"];
 
