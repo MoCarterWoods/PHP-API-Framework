@@ -15,8 +15,8 @@ class Ticket_control extends CI_Controller {
         echo json_encode($result);
     } 
 
-    public function show_drop_down (){
-        $result = $this->tkc->show_drop_down();
+    public function show_avatar (){
+        $result = $this->tkc->show_avatar();
         // echo "<pre>";
         // print_r($result);
         echo json_encode($result);

@@ -23,7 +23,8 @@ class Ticket_control_model extends CI_Model
         t1.ist_tool, 
         t1.ist_job_no,
         t1.mjt_id, 
-        t1.ist_request_by, 
+        t1.ist_request_by,
+            t1.ist_status_flg, 
     
         t2.mjt_name_eng,
         t2.mjt_name_thai,
@@ -46,7 +47,6 @@ class Ticket_control_model extends CI_Model
         t1.ist_status_flg IN (1, 5, 9)
     ORDER BY 
         t1.ist_job_no;
-    
     ";
 
         $query = $this->db->query($sql);
@@ -55,21 +55,29 @@ class Ticket_control_model extends CI_Model
     }
 
 
-    public function show_drop_down()
+    public function show_avatar()
     {
-        $sql1 = "SELECT spg_id,spg_name From sys_permission_group";
-        $query = $this->db->query($sql1);
+        $sql = "SELECT 
+        t1.ist_id, 
+        t2.lmw_id,
+        t3.swa_fristname,
+        t3.swa_lastname,
+        t3.swa_emp_code
+    FROM 
+        info_issue_ticket t1
+    LEFT JOIN 
+        log_manage_worker t2 ON t1.ist_id = t2.ist_id
+    LEFT JOIN 
+        sys_worker_app t3 ON t2.lmw_worker = t3.swa_id
+    WHERE 
+        t1.ist_status_flg IN (1, 5, 9)
+    ORDER BY 
+        t1.ist_job_no;
+    
+    ";
 
-        foreach ($query->result() as $key => $value) {
-            $arr['permission'][] = $value;
-        }
-        $sql2 = "SELECT mpc_id,mpc_code,mpc_name From mst_plant_code";
-        $query = $this->db->query($sql2);
-
-        foreach ($query->result() as $key => $value) {
-            $arr['plantcode'][] = $value;
-        }
-
-        return $arr;
+        $query = $this->db->query($sql);
+        $data = $query->result();
+        return $data;
     }
 }
