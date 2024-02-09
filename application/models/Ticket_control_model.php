@@ -24,15 +24,14 @@ class Ticket_control_model extends CI_Model
         t1.ist_job_no,
         t1.mjt_id, 
         t1.ist_request_by,
-            t1.ist_status_flg, 
-    
+        t1.ist_status_flg, 
         t2.mjt_name_eng,
         t2.mjt_name_thai,
-        t3.lmw_id,
-        t4.swa_fristname,
-        t4.swa_lastname,
-            t4.swa_emp_code,
-            t5.mts_name
+        GROUP_CONCAT(DISTINCT t3.lmw_id) AS lmw_id,
+        GROUP_CONCAT(DISTINCT t4.swa_fristname) AS swa_fristname,
+        GROUP_CONCAT(DISTINCT t4.swa_lastname) AS swa_lastname,
+        GROUP_CONCAT(DISTINCT t4.swa_emp_code) AS swa_emp_code,
+        t5.mts_name
     FROM 
         info_issue_ticket t1
     LEFT JOIN 
@@ -44,15 +43,30 @@ class Ticket_control_model extends CI_Model
     LEFT JOIN
         mst_tooling_system t5 ON t1.ist_tool = t5.mts_id
     WHERE 
-        t1.ist_status_flg IN (1, 5, 9)
+        t1.ist_status_flg IN (1, 3, 5, 7, 8)
+    GROUP BY 
+        t1.ist_id, 
+        t1.ist_type, 
+        t1.ist_pd, 
+        t1.ist_line_cd, 
+        t1.ist_area_other, 
+        t1.ist_process, 
+        t1.ist_tool, 
+        t1.ist_job_no,
+        t1.mjt_id, 
+        t1.ist_request_by,
+        t1.ist_status_flg, 
+        t2.mjt_name_eng,
+        t2.mjt_name_thai,
+        t5.mts_name
     ORDER BY 
-        t1.ist_job_no;
-    ";
+        t1.ist_job_no;";
 
         $query = $this->db->query($sql);
         $data = $query->result();
         return $data;
     }
+
 
 
     public function show_avatar()
