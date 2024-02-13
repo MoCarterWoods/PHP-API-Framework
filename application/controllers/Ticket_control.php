@@ -47,4 +47,77 @@ class Ticket_control extends CI_Controller {
         // print_r($result);
         echo json_encode($result);
     } 
+
+    public function show_problem(){
+        $data = $this->input->post();
+       
+        // $data = unserialize($this->input->post('data'));
+        $result = $this->tkc->show_problem($data);
+        // echo "<pre>";
+        // print_r($result);
+        echo json_encode($result);
+    } 
+
+    public function save_problem(){
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+        $result = $this->tkc->save_problem($data,$sess);
+       
+        echo json_encode($result);
+    }
+
+    public function show_jobtype(){
+        $data = $this->input->post();
+       
+        // $data = unserialize($this->input->post('data'));
+        $result = $this->tkc->show_jobtype($data);
+        // echo "<pre>";
+        // print_r($result);
+        echo json_encode($result);
+    } 
+
+    public function save_jobtype(){
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+        $result = $this->tkc->save_jobtype($data,$sess);
+       
+        echo json_encode($result);
+    }
+
+
+    public function show_inspection(){
+        $data = $this->input->post();
+       
+        // $data = unserialize($this->input->post('data'));
+        $result = $this->tkc->show_inspection($data);
+        // echo "<pre>";
+        // print_r($result);
+        echo json_encode($result);
+    } 
+
+        public function save_inspection(){
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+        $result = $this->tkc->save_inspection($data,$sess);
+       
+        echo json_encode($result);
+    }
+
+    public function show_analyze(){
+        $data = $this->input->post();
+       
+        // $data = unserialize($this->input->post('data'));
+        $result = $this->tkc->show_analyze($data);
+        // echo "<pre>";
+        // print_r($result);
+        echo json_encode($result);
+    } 
+    public function save_analyze(){
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+        $result = $this->tkc->save_analyze($data,$sess);
+       
+        echo json_encode($result);
+    }
+
 }

@@ -42,11 +42,16 @@ class Issue_Ticket_model extends CI_Model
 
     public function drop_problem()
     {
-        $sql_tool = "SELECT mpc_id,
+        $sql_tool = "SELECT 
+        mpc_id,
         mpc_name_eng,
         mpc_name_thai,
         mpc_detail
-        FROM mst_problem_condition WHERE mpc_status_flg =1";
+    FROM 
+        mst_problem_condition 
+    WHERE 
+        mpc_status_flg = 1 
+        AND (mpc_detail IS NULL OR mpc_detail = '');";
         $query = $this->db->query($sql_tool);
         $data = $query->result();
 
@@ -55,11 +60,13 @@ class Issue_Ticket_model extends CI_Model
 
     public function drop_inspec_method()
     {
-        $sql_inspec = "SELECT mim_id,
+        $sql_inspec = "		SELECT mim_id,
         mim_name_eng,
         mim_name_thai,
         mim_detail
-        FROM mst_inspection_method WHERE mim_status_flg =1";
+    FROM mst_inspection_method 
+		WHERE mim_status_flg =1
+				AND (mim_detail IS NULL OR mim_detail = '');";
         $query = $this->db->query($sql_inspec);
         $data = $query->result();
 
@@ -118,7 +125,7 @@ class Issue_Ticket_model extends CI_Model
         $RqrqOrderQuantity1 = $data["rqOrderQuantity1"];
         $RqrqReceivedDate1 = $data["rqReceivedDate1"];
         $RqrqReceivedQuantity1 = $data["rqReceivedQuantity1"];
-        
+
 
         $RqrqName2 = $data["rqName2"];
         $RqrqMaker2 = $data["rqMaker2"];
@@ -166,7 +173,7 @@ class Issue_Ticket_model extends CI_Model
 
 
 
-    
+
 
         $deliverydetail = $data["Detaildelivery"];
         $deliveryCheckval1 = $data["deliveryCheckval1"];
@@ -389,7 +396,7 @@ class Issue_Ticket_model extends CI_Model
 
 
 
-                
+
 
                 if ($analyzcheck1 !== '') {
                     $sql_insert_analyzcheck1 = "INSERT INTO info_analyze_problem (
