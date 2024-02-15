@@ -28,6 +28,12 @@ class Issue_Ticket extends CI_Controller {
         echo json_encode($result);
     } 
 
+    public function chkBox_problem (){
+        $result = $this->iss->chkBox_problem();
+
+        echo json_encode($result);
+    } 
+
     public function drop_inspec_method (){
         $result = $this->iss->drop_inspec_method();
 
@@ -57,7 +63,6 @@ class Issue_Ticket extends CI_Controller {
     public function save_issue(){
         $data = unserialize($this->input->post('data'));
         $sess = unserialize($this->input->post('session'));
-    
 
         $result = $this->iss->save_issue($data, $sess);
         echo json_encode($result);

@@ -50,8 +50,24 @@ class Issue_Ticket_model extends CI_Model
     FROM 
         mst_problem_condition 
     WHERE 
-        mpc_status_flg = 1 
-        AND (mpc_detail IS NULL OR mpc_detail = '');";
+        mpc_status_flg = 1;";
+        $query = $this->db->query($sql_tool);
+        $data = $query->result();
+
+        return $data;
+    }
+
+    public function chkBox_problem()
+    {
+        $sql_tool = "SELECT 
+        mpc_id,
+        mpc_name_eng,
+        mpc_name_thai,
+        mpc_detail
+    FROM 
+        mst_problem_condition 
+    WHERE 
+        mpc_status_flg = 5;";
         $query = $this->db->query($sql_tool);
         $data = $query->result();
 
@@ -89,6 +105,7 @@ class Issue_Ticket_model extends CI_Model
 
     public function save_issue($data, $sess)
     {
+
         $code = $this->get_reqCode();
         $areapd = $data["AreaPd"];
         $arealine = $data["AreaLine"];
@@ -97,80 +114,91 @@ class Issue_Ticket_model extends CI_Model
         $toolsys = $data["ToolSys"];
         $maker = $data["Maker"];
         $model = $data["Model"];
-        $jobtype = $data["JobType"];
+
         $prodcon = $data["ProbCon"];
         $prodcondetail = $data["ProbConDetail"];
-        $prodconpic1 = $data["ProbConPic1"];
-        $prodconpic2 = $data["ProbConPic2"];
-        $prodconpic3 = $data["ProbConPic3"];
+        $pbcheck1 = $data["PbCheckval1"];
+        $pbcheck2 = $data["PbCheckval2"];
+        $pbcheck3 = $data["PbCheckval3"];
+        $prodconpic = $data["fileNamesPb"];
+        $fileNames = explode(',', $prodconpic);
+
+
+        $filteredFileNames = [];
+        foreach ($fileNames as $fileName) {
+            if (!empty($fileName)) {
+                $filteredFileNames[] = $fileName;
+            }
+        }
+
+        while (count($filteredFileNames) < 3) {
+            $filteredFileNames[] = '';
+        }
+
+        // เตรียมข้อมูลสำหรับการใช้งานต่อไป
+        $pbfileName1 = isset($filteredFileNames[0]) ? $filteredFileNames[0] : '';
+        $pbfileName2 = isset($filteredFileNames[1]) ? $filteredFileNames[1] : '';
+        $pbfileName3 = isset($filteredFileNames[2]) ? $filteredFileNames[2] : '';
+
+
+
+        $jobtype = $data["JobtypeRadioVal"];
+
+
         $ispec = $data["InspecMethod"];
         $ispecdetail = $data["InspecDetail"];
-        $ispecpic1 = $data["InspecPic1"];
-        $ispecpic2 = $data["InspecPic2"];
-        $ispecpic3 = $data["InspecPic3"];
+        $inspeccheck1 = $data["InsCheckval1"];
+        $inspeccheck2 = $data["InsCheckval2"];
+        $inspeccheck3 = $data["InsCheckval3"];
+        $inspecpic = $data["fileNamesIns"];
+        $insfileNames = explode(',', $inspecpic);
+
+
+        $insfilteredFileNames = [];
+        foreach ($insfileNames as $insfileName) {
+            if (!empty($insfileName)) {
+                $insfilteredFileNames[] = $insfileName;
+            }
+        }
+
+        while (count($insfilteredFileNames) < 3) {
+            $insfilteredFileNames[] = '';
+        }
+
+        // เตรียมข้อมูลสำหรับการใช้งานต่อไป
+        $insfileName1 = isset($insfilteredFileNames[0]) ? $insfilteredFileNames[0] : '';
+        $insfileName2 = isset($insfilteredFileNames[1]) ? $insfilteredFileNames[1] : '';
+        $insfileName3 = isset($insfilteredFileNames[2]) ? $insfilteredFileNames[2] : '';
+
         $trouble = $data["Trouble"];
         $troubledetail = $data["TroubleDetail"];
-        $troublepic1 = $data["TroublePic1"];
-        $troublepic2 = $data["TroublePic2"];
-        $troublepic3 = $data["TroublePic3"];
+
+        $troubleCheckval1 = $data["TroubleCheckval1"];
+        $troubleCheckval2 = $data["TroubleCheckval2"];
+        $troubleCheckval3 = $data["TroubleCheckval3"];
+        $troubleCheckval4 = $data["TroubleCheckval4"];
+        $troubleDetail3 = $data["TroubleDetail3"];
+        $troubleDetail4 = $data["TroubleDetail4"];
+
+        $troublepic = $data["fileNamesTroub"];
+        $troubfileNames = explode(',', $troublepic);
 
 
-        $RqrqName1 = $data["rqName1"];
-        $RqrqMaker1 = $data["rqMaker1"];
-        $RqrqModel1 = $data["rqModel1"];
-        $RqrqQty1 = $data["rqQty1"];
-        $RqrqStockDate1 = $data["rqStockDate1"];
-        $RqrqStockQuantity1 = $data["rqStockQuantity1"];
-        $RqrqOrderDate1 = $data["rqOrderDate1"];
-        $RqrqOrderQuantity1 = $data["rqOrderQuantity1"];
-        $RqrqReceivedDate1 = $data["rqReceivedDate1"];
-        $RqrqReceivedQuantity1 = $data["rqReceivedQuantity1"];
+        $troubfilteredFileNames = [];
+        foreach ($troubfileNames as $troubfileName) {
+            if (!empty($troubfileName)) {
+                $troubfilteredFileNames[] = $troubfileName;
+            }
+        }
 
+        while (count($troubfilteredFileNames) < 3) {
+            $troubfilteredFileNames[] = '';
+        }
 
-        $RqrqName2 = $data["rqName2"];
-        $RqrqMaker2 = $data["rqMaker2"];
-        $RqrqModel2 = $data["rqModel2"];
-        $RqrqQty2 = $data["rqQty2"];
-        $RqrqStockDate2 = $data["rqStockDate2"];
-        $RqrqStockQuantity2 = $data["rqStockQuantity2"];
-        $RqrqOrderDate2 = $data["rqOrderDate2"];
-        $RqrqOrderQuantity2 = $data["rqOrderQuantity2"];
-        $RqrqReceivedDate2 = $data["rqReceivedDate2"];
-        $RqrqReceivedQuantity2 = $data["rqReceivedQuantity2"];
-
-        $RqrqName3 = $data["rqName3"];
-        $RqrqMaker3 = $data["rqMaker3"];
-        $RqrqModel3 = $data["rqModel3"];
-        $RqrqQty3 = $data["rqQty3"];
-        $RqrqStockDate3 = $data["rqStockDate3"];
-        $RqrqStockQuantity3 = $data["rqStockQuantity3"];
-        $RqrqOrderDate3 = $data["rqOrderDate3"];
-        $RqrqOrderQuantity3 = $data["rqOrderQuantity3"];
-        $RqrqReceivedDate3 = $data["rqReceivedDate3"];
-        $RqrqReceivedQuantity3 = $data["rqReceivedQuantity3"];
-
-        $RqrqName4 = $data["rqName4"];
-        $RqrqMaker4 = $data["rqMaker4"];
-        $RqrqModel4 = $data["rqModel4"];
-        $RqrqQty4 = $data["rqQty4"];
-        $RqrqStockDate4 = $data["rqStockDate4"];
-        $RqrqStockQuantity4 = $data["rqStockQuantity4"];
-        $RqrqOrderDate4 = $data["rqOrderDate4"];
-        $RqrqOrderQuantity4 = $data["rqOrderQuantity4"];
-        $RqrqReceivedDate4 = $data["rqReceivedDate4"];
-        $RqrqReceivedQuantity4 = $data["rqReceivedQuantity4"];
-
-        $RqrqName5 = $data["rqName5"];
-        $RqrqMaker5 = $data["rqMaker5"];
-        $RqrqModel5 = $data["rqModel5"];
-        $RqrqQty5 = $data["rqQty5"];
-        $RqrqStockDate5 = $data["rqStockDate5"];
-        $RqrqStockQuantity5 = $data["rqStockQuantity5"];
-        $RqrqOrderDate5 = $data["rqOrderDate5"];
-        $RqrqOrderQuantity5 = $data["rqOrderQuantity5"];
-        $RqrqReceivedDate5 = $data["rqReceivedDate5"];
-        $RqrqReceivedQuantity5 = $data["rqReceivedQuantity5"];
-
+        // เตรียมข้อมูลสำหรับการใช้งานต่อไป
+        $troubfileName1 = isset($troubfilteredFileNames[0]) ? $troubfilteredFileNames[0] : '';
+        $troubfileName2 = isset($troubfilteredFileNames[1]) ? $troubfilteredFileNames[1] : '';
+        $troubfileName3 = isset($troubfilteredFileNames[2]) ? $troubfilteredFileNames[2] : '';
 
 
 
@@ -223,7 +251,7 @@ class Issue_Ticket_model extends CI_Model
         ist_status_flg,
         ist_created_date,
         ist_created_by) 
-        VALUES (2,'$areapd','$arealine','$areaother','$processfun','$toolsys','$maker','$model','$code',NOW(),'$jobtype','$prodcon','$ispec','$trouble','$sess',NOW(),1,NOW(),'$sess')";
+        VALUES (2,'$areapd','$arealine','$areaother','$processfun','$toolsys','$maker','$model','$code',NOW(),'$jobtype','$prodcon','$ispec','$trouble','$sess',NOW(),3,NOW(),'$sess')";
 
         $query_insert_issue_ticket = $this->db->query($sql_insert_issue_ticket);
 
@@ -243,29 +271,225 @@ class Issue_Ticket_model extends CI_Model
                 ipc_detail,
                 ipc_pic_1,
                 ipc_pic_2,
-                ipc_pfc_3,
-                ipc__path,
+                ipc_pic_3,
+                ipc_path,
                 ipc_status_flg,
                 ipc_created_date,
                 ipc_created_by
-            ) VALUES ('$ist_id','$prodcon','$prodcondetail','$prodconpic1','$prodconpic2','$prodconpic3','ipc__path',1,NOW(),'$sess')";
+            ) VALUES ('$ist_id','$prodcon','$prodcondetail','$pbfileName1','$pbfileName2','$pbfileName3','assets/img/upload/problem/',1,NOW(),'$sess')";
 
                 $query_insert_problem_condition = $this->db->query($sql_insert_problem_condition);
 
+                if ($pbcheck1 !== '') {
+                    $sql_insert_problem_1 = "INSERT INTO info_problem_condition (
+                        ist_id,
+                        mpc_id,
+                        ipc_status_flg,
+                        ipc_created_date,
+                        ipc_created_by)
+                    VALUES ('$ist_id','$pbcheck1',1,NOW(),'$sess')";
+
+                    $query_insert_problem_1 = $this->db->query($sql_insert_problem_1);
+
+                    if ($this->db->affected_rows() > 0) {
+                        // เพิ่มข้อมูลสำเร็จ
+                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                    } else {
+                        // ไม่สามารถเพิ่มข้อมูลได้
+                    }
+                }
+
+                if ($pbcheck2 !== '') {
+                    $sql_insert_problem_2 = "INSERT INTO info_problem_condition (
+                        ist_id,
+                        mpc_id,
+                        ipc_status_flg,
+                        ipc_created_date,
+                        ipc_created_by)
+                    VALUES ('$ist_id','$pbcheck2',1,NOW(),'$sess')";
+
+                    $query_insert_problem_2 = $this->db->query($sql_insert_problem_2);
+
+                    if ($this->db->affected_rows() > 0) {
+                        // เพิ่มข้อมูลสำเร็จ
+                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                    } else {
+                        // ไม่สามารถเพิ่มข้อมูลได้
+                    }
+                }
+
+                if ($pbcheck3 !== '') {
+                    $sql_insert_problem_3 = "INSERT INTO info_problem_condition (
+                        ist_id,
+                        mpc_id,
+                        ipc_status_flg,
+                        ipc_created_date,
+                        ipc_created_by)
+                    VALUES ('$ist_id','$pbcheck3',1,NOW(),'$sess')";
+
+                    $query_insert_problem_3 = $this->db->query($sql_insert_problem_3);
+
+                    if ($this->db->affected_rows() > 0) {
+                        // เพิ่มข้อมูลสำเร็จ
+                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                    } else {
+                        // ไม่สามารถเพิ่มข้อมูลได้
+                    }
+                }
+
+
 
                 $sql_insert_troubleshooting = "INSERT INTO info_troubleshooting (ist_id,
-            mt_id,
-            it_detail,
-            it_pic_1,
-            it_pic_2,
-            it_pfc_3,
-            it_path,
-            it_status_flg,
-            it_created_date,
-            it_created_by
-            ) VALUES ('$ist_id','$trouble','$troubledetail','$troublepic1','$troublepic2','$troublepic3','it_path',1,NOW(),'$sess')";
+                mt_id,
+                it_detail,
+                it_pic_1,
+                it_pic_2,
+                it_pic_3,
+                it_path,
+                it_status_flg,
+                it_created_date,
+                it_created_by
+            ) VALUES ('$ist_id','$trouble','$troubledetail','$troubfileName1','$troubfileName2','$troubfileName3','assets/img/upload/trouble/',1,NOW(),'$sess')";
 
                 $query_insert_troubleshooting = $this->db->query($sql_insert_troubleshooting);
+
+
+                
+                if ($troubleCheckval1 !== '') {
+                    $sql_insert_troubel_1 = "INSERT INTO info_troubleshooting (
+                        ist_id,
+                        mt_id,
+                        it_status_flg,
+                        it_created_date,
+                        it_created_by)
+                    VALUES ('$ist_id','$troubleCheckval1',1,NOW(),'$sess')";
+
+                    $query_insert_troubel_1 = $this->db->query($sql_insert_troubel_1);
+
+                    if ($this->db->affected_rows() > 0) {
+                        // เพิ่มข้อมูลสำเร็จ
+                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                    } else {
+                        // ไม่สามารถเพิ่มข้อมูลได้
+                    }
+                }
+
+                if ($troubleCheckval2 !== '') {
+                        $sql_insert_troubel_2 = "INSERT INTO info_troubleshooting (
+                            ist_id,
+                            mt_id,
+                            it_status_flg,
+                            it_created_date,
+                            it_created_by)
+                        VALUES ('$ist_id','$troubleCheckval2',1,NOW(),'$sess')";
+    
+                        $query_insert_troubel_2 = $this->db->query($sql_insert_troubel_2);
+
+                        if ($this->db->affected_rows() > 0) {
+                            // เพิ่มข้อมูลสำเร็จ
+                            // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                        } else {
+                            // ไม่สามารถเพิ่มข้อมูลได้
+                        }
+                    }
+
+                if ($troubleCheckval3 !== '') {
+                            $sql_insert_troubel_3 = "INSERT INTO info_troubleshooting (
+                                ist_id,
+                                mt_id,
+                                it_detail,
+                                it_status_flg,
+                                it_created_date,
+                                it_created_by)
+                            VALUES ('$ist_id','$troubleCheckval3','$troubleDetail3',1,NOW(),'$sess')";
+        
+                            $query_insert_troubel_3 = $this->db->query($sql_insert_troubel_3);
+
+                            if ($this->db->affected_rows() > 0) {
+                                // เพิ่มข้อมูลสำเร็จ
+                                // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                            } else {
+                                // ไม่สามารถเพิ่มข้อมูลได้
+                            }
+                        }
+
+                if ($troubleCheckval4 !== '') {
+                                $sql_insert_troubel_4 = "INSERT INTO info_troubleshooting (
+                                    ist_id,
+                                    mt_id,
+                                    it_detail,
+                                    it_status_flg,
+                                    it_created_date,
+                                    it_created_by)
+                                VALUES ('$ist_id','$troubleCheckval4','$troubleDetail4',1,NOW(),'$sess')";
+            
+                                $query_insert_troubel_4 = $this->db->query($sql_insert_troubel_4);
+
+                                if ($this->db->affected_rows() > 0) {
+                                    // เพิ่มข้อมูลสำเร็จ
+                                    // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                                } else {
+                                    // ไม่สามารถเพิ่มข้อมูลได้
+                                }
+                            }
+
+
+                if ($inspeccheck1 !== '') {
+                    $sql_insert_inspec_1 = "INSERT INTO info_inspection_method (
+                        ist_id,
+                        mim_id,
+                        iim_status_flg,
+                        iim_created_date,
+                        iim_created_by)
+                    VALUES ('$ist_id','$inspeccheck1',1,NOW(),'$sess')";
+
+                    $query_insert_inspec_1 = $this->db->query($sql_insert_inspec_1);
+
+                    if ($this->db->affected_rows() > 0) {
+                        // เพิ่มข้อมูลสำเร็จ
+                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                    } else {
+                        // ไม่สามารถเพิ่มข้อมูลได้
+                    }
+                }
+
+                if ($inspeccheck2 !== '') {
+                    $sql_insert_inspec_2 = "INSERT INTO info_inspection_method (
+                        ist_id,
+                        mim_id,
+                        iim_status_flg,
+                        iim_created_date,
+                        iim_created_by)
+                    VALUES ('$ist_id','$inspeccheck2',1,NOW(),'$sess')";
+
+                    $query_insert_inspec_2 = $this->db->query($sql_insert_inspec_2);
+
+                    if ($this->db->affected_rows() > 0) {
+                        // เพิ่มข้อมูลสำเร็จ
+                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                    } else {
+                        // ไม่สามารถเพิ่มข้อมูลได้
+                    }
+                }
+
+                if ($inspeccheck3 !== '') {
+                    $sql_insert_inspec_3 = "INSERT INTO info_inspection_method (
+                        ist_id,
+                        mim_id,
+                        iim_status_flg,
+                        iim_created_date,
+                        iim_created_by)
+                    VALUES ('$ist_id','$inspeccheck3',1,NOW(),'$sess')";
+
+                    $query_insert_inspec_3 = $this->db->query($sql_insert_inspec_3);
+
+                    if ($this->db->affected_rows() > 0) {
+                        // เพิ่มข้อมูลสำเร็จ
+                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                    } else {
+                        // ไม่สามารถเพิ่มข้อมูลได้
+                    }
+                }
 
 
                 if ($deliveryCheckval1 !== '') {
@@ -578,130 +802,130 @@ class Issue_Ticket_model extends CI_Model
 
 
 
-                if ($RqrqName1 !== '') {
-                    $sql_insert_rqp1 = "INSERT INTO info_required_parts (
-                        ist_id,
-                        irp_name,
-                        irp_maker,
-                        irp_model,
-                        irp_qty,
-                        irp_withdraw_time,
-                        irp_withdraw_qty,
-                        irp_order_time,
-                        irp_order_qty,
-                        irp_received_time,
-                        irp_received_qty,
-                        irp_status_flg,
-                        irp_created_date,
-                        irp_created_by
-                    ) VALUES ('$ist_id','$RqrqName1','$RqrqMaker1','$RqrqModel1','$RqrqQty1','$RqrqStockDate1','$RqrqStockQuantity1','$RqrqOrderDate1','$RqrqOrderQuantity1','$RqrqReceivedDate1','$RqrqReceivedQuantity1' ,1,NOW(),'$sess')";
+                // if ($RqrqName1 !== '') {
+                //     $sql_insert_rqp1 = "INSERT INTO info_required_parts (
+                //         ist_id,
+                //         irp_name,
+                //         irp_maker,
+                //         irp_model,
+                //         irp_qty,
+                //         irp_withdraw_time,
+                //         irp_withdraw_qty,
+                //         irp_order_time,
+                //         irp_order_qty,
+                //         irp_received_time,
+                //         irp_received_qty,
+                //         irp_status_flg,
+                //         irp_created_date,
+                //         irp_created_by
+                //     ) VALUES ('$ist_id','$RqrqName1','$RqrqMaker1','$RqrqModel1','$RqrqQty1','$RqrqStockDate1','$RqrqStockQuantity1','$RqrqOrderDate1','$RqrqOrderQuantity1','$RqrqReceivedDate1','$RqrqReceivedQuantity1' ,1,NOW(),'$sess')";
 
-                    $query_insert_reqp1 = $this->db->query($sql_insert_rqp1);
+                //     $query_insert_reqp1 = $this->db->query($sql_insert_rqp1);
 
-                    if ($this->db->affected_rows() > 0) {
-                    } else {
-                    }
-                }
+                //     if ($this->db->affected_rows() > 0) {
+                //     } else {
+                //     }
+                // }
 
-                if ($RqrqName2 !== '') {
-                    $sql_insert_rqp2 = "INSERT INTO info_required_parts (
-                        ist_id,
-                        irp_name,
-                        irp_maker,
-                        irp_model,
-                        irp_qty,
-                        irp_withdraw_time,
-                        irp_withdraw_qty,
-                        irp_order_time,
-                        irp_order_qty,
-                        irp_received_time,
-                        irp_received_qty,
-                        irp_status_flg,
-                        irp_created_date,
-                        irp_created_by
-                    ) VALUES ('$ist_id','$RqrqName2','$RqrqMaker2','$RqrqModel2','$RqrqQty2','$RqrqStockDate2','$RqrqStockQuantity2','$RqrqOrderDate2','$RqrqOrderQuantity2','$RqrqReceivedDate2','$RqrqReceivedQuantity2' ,1,NOW(),'$sess')";
+                // if ($RqrqName2 !== '') {
+                //     $sql_insert_rqp2 = "INSERT INTO info_required_parts (
+                //         ist_id,
+                //         irp_name,
+                //         irp_maker,
+                //         irp_model,
+                //         irp_qty,
+                //         irp_withdraw_time,
+                //         irp_withdraw_qty,
+                //         irp_order_time,
+                //         irp_order_qty,
+                //         irp_received_time,
+                //         irp_received_qty,
+                //         irp_status_flg,
+                //         irp_created_date,
+                //         irp_created_by
+                //     ) VALUES ('$ist_id','$RqrqName2','$RqrqMaker2','$RqrqModel2','$RqrqQty2','$RqrqStockDate2','$RqrqStockQuantity2','$RqrqOrderDate2','$RqrqOrderQuantity2','$RqrqReceivedDate2','$RqrqReceivedQuantity2' ,1,NOW(),'$sess')";
 
-                    $query_insert_reqp2 = $this->db->query($sql_insert_rqp2);
+                //     $query_insert_reqp2 = $this->db->query($sql_insert_rqp2);
 
-                    if ($this->db->affected_rows() > 0) {
-                    } else {
-                    }
-                }
+                //     if ($this->db->affected_rows() > 0) {
+                //     } else {
+                //     }
+                // }
 
-                if ($RqrqName3 !== '') {
-                    $sql_insert_rqp3 = "INSERT INTO info_required_parts (
-                        ist_id,
-                        irp_name,
-                        irp_maker,
-                        irp_model,
-                        irp_qty,
-                        irp_withdraw_time,
-                        irp_withdraw_qty,
-                        irp_order_time,
-                        irp_order_qty,
-                        irp_received_time,
-                        irp_received_qty,
-                        irp_status_flg,
-                        irp_created_date,
-                        irp_created_by
-                    ) VALUES ('$ist_id','$RqrqName3','$RqrqMaker3','$RqrqModel3','$RqrqQty3','$RqrqStockDate3','$RqrqStockQuantity3','$RqrqOrderDate3','$RqrqOrderQuantity3','$RqrqReceivedDate3','$RqrqReceivedQuantity3' ,1,NOW(),'$sess')";
+                // if ($RqrqName3 !== '') {
+                //     $sql_insert_rqp3 = "INSERT INTO info_required_parts (
+                //         ist_id,
+                //         irp_name,
+                //         irp_maker,
+                //         irp_model,
+                //         irp_qty,
+                //         irp_withdraw_time,
+                //         irp_withdraw_qty,
+                //         irp_order_time,
+                //         irp_order_qty,
+                //         irp_received_time,
+                //         irp_received_qty,
+                //         irp_status_flg,
+                //         irp_created_date,
+                //         irp_created_by
+                //     ) VALUES ('$ist_id','$RqrqName3','$RqrqMaker3','$RqrqModel3','$RqrqQty3','$RqrqStockDate3','$RqrqStockQuantity3','$RqrqOrderDate3','$RqrqOrderQuantity3','$RqrqReceivedDate3','$RqrqReceivedQuantity3' ,1,NOW(),'$sess')";
 
-                    $query_insert_reqp3 = $this->db->query($sql_insert_rqp3);
+                //     $query_insert_reqp3 = $this->db->query($sql_insert_rqp3);
 
-                    if ($this->db->affected_rows() > 0) {
-                    } else {
-                    }
-                }
+                //     if ($this->db->affected_rows() > 0) {
+                //     } else {
+                //     }
+                // }
 
-                if ($RqrqName4 !== '') {
-                    $sql_insert_rqp4 = "INSERT INTO info_required_parts (
-                        ist_id,
-                        irp_name,
-                        irp_maker,
-                        irp_model,
-                        irp_qty,
-                        irp_withdraw_time,
-                        irp_withdraw_qty,
-                        irp_order_time,
-                        irp_order_qty,
-                        irp_received_time,
-                        irp_received_qty,
-                        irp_status_flg,
-                        irp_created_date,
-                        irp_created_by
-                    ) VALUES ('$ist_id','$RqrqName4','$RqrqMaker4','$RqrqModel4','$RqrqQty4','$RqrqStockDate4','$RqrqStockQuantity4','$RqrqOrderDate4','$RqrqOrderQuantity4','$RqrqReceivedDate4','$RqrqReceivedQuantity4' ,1,NOW(),'$sess')";
+                // if ($RqrqName4 !== '') {
+                //     $sql_insert_rqp4 = "INSERT INTO info_required_parts (
+                //         ist_id,
+                //         irp_name,
+                //         irp_maker,
+                //         irp_model,
+                //         irp_qty,
+                //         irp_withdraw_time,
+                //         irp_withdraw_qty,
+                //         irp_order_time,
+                //         irp_order_qty,
+                //         irp_received_time,
+                //         irp_received_qty,
+                //         irp_status_flg,
+                //         irp_created_date,
+                //         irp_created_by
+                //     ) VALUES ('$ist_id','$RqrqName4','$RqrqMaker4','$RqrqModel4','$RqrqQty4','$RqrqStockDate4','$RqrqStockQuantity4','$RqrqOrderDate4','$RqrqOrderQuantity4','$RqrqReceivedDate4','$RqrqReceivedQuantity4' ,1,NOW(),'$sess')";
 
-                    $query_insert_reqp4 = $this->db->query($sql_insert_rqp4);
+                //     $query_insert_reqp4 = $this->db->query($sql_insert_rqp4);
 
-                    if ($this->db->affected_rows() > 0) {
-                    } else {
-                    }
-                }
+                //     if ($this->db->affected_rows() > 0) {
+                //     } else {
+                //     }
+                // }
 
-                if ($RqrqName5 !== '') {
-                    $sql_insert_rqp5 = "INSERT INTO info_required_parts (
-                        ist_id,
-                        irp_name,
-                        irp_maker,
-                        irp_model,
-                        irp_qty,
-                        irp_withdraw_time,
-                        irp_withdraw_qty,
-                        irp_order_time,
-                        irp_order_qty,
-                        irp_received_time,
-                        irp_received_qty,
-                        irp_status_flg,
-                        irp_created_date,
-                        irp_created_by
-                    ) VALUES ('$ist_id','$RqrqName5','$RqrqMaker5','$RqrqModel5','$RqrqQty5','$RqrqStockDate5','$RqrqStockQuantity5','$RqrqOrderDate5','$RqrqOrderQuantity5','$RqrqReceivedDate5','$RqrqReceivedQuantity5' ,1,NOW(),'$sess')";
+                // if ($RqrqName5 !== '') {
+                //     $sql_insert_rqp5 = "INSERT INTO info_required_parts (
+                //         ist_id,
+                //         irp_name,
+                //         irp_maker,
+                //         irp_model,
+                //         irp_qty,
+                //         irp_withdraw_time,
+                //         irp_withdraw_qty,
+                //         irp_order_time,
+                //         irp_order_qty,
+                //         irp_received_time,
+                //         irp_received_qty,
+                //         irp_status_flg,
+                //         irp_created_date,
+                //         irp_created_by
+                //     ) VALUES ('$ist_id','$RqrqName5','$RqrqMaker5','$RqrqModel5','$RqrqQty5','$RqrqStockDate5','$RqrqStockQuantity5','$RqrqOrderDate5','$RqrqOrderQuantity5','$RqrqReceivedDate5','$RqrqReceivedQuantity5' ,1,NOW(),'$sess')";
 
-                    $query_insert_reqp5 = $this->db->query($sql_insert_rqp5);
+                //     $query_insert_reqp5 = $this->db->query($sql_insert_rqp5);
 
-                    if ($this->db->affected_rows() > 0) {
-                    } else {
-                    }
-                }
+                //     if ($this->db->affected_rows() > 0) {
+                //     } else {
+                //     }
+                // }
 
 
 
@@ -713,12 +937,12 @@ class Issue_Ticket_model extends CI_Model
                     iim_detail,
                     iim_pic_1,
                     iim_pic_2,
-                    iim_pfc_3,
+                    iim_pic_3,
                     iim_path,
                     iim_status_flg,
                     iim_created_date,
                     iim_created_by
-                ) VALUES ('$ist_id','$ispec','$ispecdetail','$ispecpic1','$ispecpic2','$ispecpic3','iim_path',1,NOW(),'$sess')";
+                ) VALUES ('$ist_id','$ispec','$ispecdetail','$insfileName1','$insfileName2','$insfileName3','assets/img/upload/inspection/',1,NOW(),'$sess')";
 
                     $query_insert_inspection_method = $this->db->query($sql_insert_inspection_method);
 
@@ -736,7 +960,8 @@ class Issue_Ticket_model extends CI_Model
         } else {
             return array('result' => 0, 'message' => 'Insert ล้มเหลวในตาราง info_issue_ticket');
         }
-    }
+    
+}
 
 
 
@@ -765,3 +990,4 @@ class Issue_Ticket_model extends CI_Model
         return $code;
     }
 }
+    
