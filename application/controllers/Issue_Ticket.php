@@ -22,6 +22,13 @@ class Issue_Ticket extends CI_Controller {
         echo json_encode($result);
     } 
 
+
+    public function drop_type (){
+        $result = $this->iss->drop_type();
+
+        echo json_encode($result);
+    } 
+
     public function drop_problem (){
         $result = $this->iss->drop_problem();
 
