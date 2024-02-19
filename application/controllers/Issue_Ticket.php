@@ -41,8 +41,20 @@ class Issue_Ticket extends CI_Controller {
         echo json_encode($result);
     } 
 
+    public function radio_jobtype (){
+        $result = $this->iss->radio_jobtype();
+
+        echo json_encode($result);
+    } 
+
     public function drop_inspec_method (){
         $result = $this->iss->drop_inspec_method();
+
+        echo json_encode($result);
+    } 
+
+    public function chkBox_inspection (){
+        $result = $this->iss->chkBox_inspection();
 
         echo json_encode($result);
     } 
@@ -53,7 +65,29 @@ class Issue_Ticket extends CI_Controller {
         echo json_encode($result);
     } 
 
+    public function chkBox_trouble1 (){
+        $result = $this->iss->chkBox_trouble1();
 
+        echo json_encode($result);
+    } 
+
+    public function chkBox_trouble2 (){
+        $result = $this->iss->chkBox_trouble2();
+
+        echo json_encode($result);
+    } 
+
+    public function chkBox_analysis (){
+        $result = $this->iss->chkBox_analysis();
+
+        echo json_encode($result);
+    } 
+
+    public function chkBox_delivery (){
+        $result = $this->iss->chkBox_delivery();
+
+        echo json_encode($result);
+    } 
 
     public function upload_file() {
     $targetDirectory = '127.0.0.1/ticket/assets/img/ProblemCondition/';

@@ -59,11 +59,12 @@ class Issue_Ticket_model extends CI_Model
         mpc_id,
         mpc_name_eng,
         mpc_name_thai,
+        mpc_status_flg,
         mpc_detail
     FROM 
         mst_problem_condition 
     WHERE 
-        mpc_status_flg = 1;";
+        mpc_type = 1 AND mpc_status_flg = 1;";
         $query = $this->db->query($sql_tool);
         $data = $query->result();
 
@@ -72,7 +73,7 @@ class Issue_Ticket_model extends CI_Model
 
     public function chkBox_problem()
     {
-        $sql_tool = "SELECT 
+        $sql_pb = "SELECT 
         mpc_id,
         mpc_name_eng,
         mpc_name_thai,
@@ -80,8 +81,25 @@ class Issue_Ticket_model extends CI_Model
     FROM 
         mst_problem_condition 
     WHERE 
-        mpc_status_flg = 5;";
-        $query = $this->db->query($sql_tool);
+        mpc_type = 5 AND mpc_status_flg = 1;";
+        $query = $this->db->query($sql_pb);
+        $data = $query->result();
+
+        return $data;
+    }
+
+    public function radio_jobtype()
+    {
+        $sql_jbt = "SELECT 
+        mjt_id,
+        mjt_name_eng,
+        mjt_name_thai,
+        mjt_status_flg
+    FROM 
+        mst_job_type 
+    WHERE 
+        mjt_status_flg = 1;";
+        $query = $this->db->query($sql_jbt);
         $data = $query->result();
 
         return $data;
@@ -89,13 +107,34 @@ class Issue_Ticket_model extends CI_Model
 
     public function drop_inspec_method()
     {
-        $sql_inspec = "		SELECT mim_id,
+        $sql_inspec = "SELECT 
+        mim_id,
         mim_name_eng,
         mim_name_thai,
+        mim_status_flg,
         mim_detail
-    FROM mst_inspection_method 
-		WHERE mim_status_flg =1
-				AND (mim_detail IS NULL OR mim_detail = '');";
+    FROM 
+        mst_inspection_method 
+    WHERE 
+        mim_type = 1 AND mim_status_flg = 1;";
+        $query = $this->db->query($sql_inspec);
+        $data = $query->result();
+
+        return $data;
+    }
+
+    public function chkBox_inspection()
+    {
+        $sql_inspec = "SELECT 
+        mim_id,
+        mim_name_eng,
+        mim_name_thai,
+        mim_status_flg,
+        mim_detail
+    FROM 
+        mst_inspection_method 
+    WHERE 
+        mim_type = 5 AND mim_status_flg = 1;";
         $query = $this->db->query($sql_inspec);
         $data = $query->result();
 
@@ -104,17 +143,85 @@ class Issue_Ticket_model extends CI_Model
 
     public function drop_trouble()
     {
-        $sql_inspec = "SELECT mt_id,
+        $sql_trouble = "SELECT mt_id,
         mt_name_eng,
         mt_name_thai,
         mt_detail
-        FROM mst_troubleshooting WHERE mt_status_flg =1";
-        $query = $this->db->query($sql_inspec);
+        FROM mst_troubleshooting 
+		WHERE mt_status_flg =1 AND mt_type =1";
+        $query = $this->db->query($sql_trouble);
         $data = $query->result();
 
         return $data;
     }
 
+    public function chkBox_trouble1()
+    {
+        $sql_trouble = "SELECT 
+        mt_id,
+        mt_name_eng,
+        mt_name_thai,
+        mt_status_flg,
+        mt_detail
+    FROM 
+        mst_troubleshooting 
+    WHERE 
+        mt_type = 2 AND mt_status_flg = 1;";
+        $query = $this->db->query($sql_trouble);
+        $data = $query->result();
+
+        return $data;
+    }
+
+    public function chkBox_trouble2()
+    {
+        $sql_trouble = "SELECT 
+        mt_id,
+        mt_name_eng,
+        mt_name_thai,
+        mt_status_flg,
+        mt_detail
+    FROM 
+        mst_troubleshooting 
+    WHERE 
+        mt_type = 5 AND mt_status_flg = 1;";
+        $query = $this->db->query($sql_trouble);
+        $data = $query->result();
+
+        return $data;
+    }
+
+    public function chkBox_analysis()
+    {
+        $sql_trouble = "SELECT 
+        map_id,
+        map_name,
+        map_status_flg
+    FROM 
+        mst_analyze_problem 
+    WHERE 
+        map_status_flg = 1 ;";
+        $query = $this->db->query($sql_trouble);
+        $data = $query->result();
+
+        return $data;
+    }
+
+    public function chkBox_delivery()
+    {
+        $sql_trouble = "SELECT 
+        mde_id,
+        mde_name,
+        mde_status_flg
+    FROM 
+        mst_delivery_equipment 
+    WHERE 
+        mde_status_flg = 1 ;";
+        $query = $this->db->query($sql_trouble);
+        $data = $query->result();
+
+        return $data;
+    }
 
     public function save_issue($data, $sess)
     {

@@ -58,6 +58,12 @@ class Ticket_control extends CI_Controller {
         echo json_encode($result);
     } 
 
+    public function chkBox_problem (){
+        $result = $this->tkc->chkBox_problem();
+
+        echo json_encode($result);
+    } 
+
     public function save_problem(){
         $data = unserialize($this->input->post('data'));
         $sess = unserialize($this->input->post('session'));
@@ -76,6 +82,11 @@ class Ticket_control extends CI_Controller {
         echo json_encode($result);
     } 
 
+    public function radio_jobtype (){
+        $result = $this->tkc->radio_jobtype();
+
+        echo json_encode($result);
+    } 
     public function save_jobtype(){
         $data = unserialize($this->input->post('data'));
         $sess = unserialize($this->input->post('session'));
@@ -92,6 +103,12 @@ class Ticket_control extends CI_Controller {
         $result = $this->tkc->show_inspection($data);
         // echo "<pre>";
         // print_r($result);
+        echo json_encode($result);
+    } 
+
+    public function chkBox_inspection (){
+        $result = $this->tkc->chkBox_inspection();
+
         echo json_encode($result);
     } 
 
@@ -120,4 +137,21 @@ class Ticket_control extends CI_Controller {
         echo json_encode($result);
     }
 
+    public function show_delivery(){
+        $data = $this->input->post();
+       
+        // $data = unserialize($this->input->post('data'));
+        $result = $this->tkc->show_delivery($data);
+        // echo "<pre>";
+        // print_r($result);
+        echo json_encode($result);
+    } 
+
+    public function save_delivery(){
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+        $result = $this->tkc->save_delivery($data,$sess);
+       
+        echo json_encode($result);
+    }
 }
