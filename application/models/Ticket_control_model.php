@@ -27,53 +27,70 @@ class Ticket_control_model extends CI_Model
         GROUP_CONCAT( DISTINCT t4.swa_fristname ) AS swa_fristname,
         GROUP_CONCAT( DISTINCT t4.swa_emp_code ) AS swa_emp_code,
         t5.mts_name,
+    CASE
+            
+            WHEN t1.ist_line_cd 
+            OR t1.ist_area_other IS NULL THEN
+                1 ELSE 3 
+                END AS equipment_status,
+            COALESCE ( t6.ipc_status_flg, 1 ) AS problem_status,
         CASE
-         WHEN t1.ist_line_cd OR t1.ist_area_other IS NULL THEN
-         1 ELSE 3
-        END AS equipment_status,
-        t6.ipc_status_flg AS ploblem_status,
-        CASE
-         WHEN t1.mjt_id  IS NULL THEN
-         1 ELSE 3
-        END AS jopType_status,
-        t7.iim_status_flg AS inspection_status,
-        t8.it_status_flg AS troubleshooting_status,
-        t9.irp_status_flg AS rqPart_status,
-        t10.iap_status_flg AS analyze_status,
-        t11.ipr_status_flg AS prevention_status,
-        t12.ide_status_flg AS delivery_status,
-        t1.ist_status_flg
-       FROM
-        info_issue_ticket t1
-        LEFT JOIN mst_job_type t2 ON t1.mjt_id = t2.mjt_id
-        LEFT JOIN log_manage_worker t3 ON t1.ist_id = t3.ist_id
-        LEFT JOIN sys_worker_app t4 ON t3.lmw_worker = t4.swa_id
-        LEFT JOIN mst_tooling_system t5 ON t1.ist_tool = t5.mts_id
-        LEFT JOIN info_problem_condition t6 ON t1.ist_id = t6.ist_id
-        LEFT JOIN info_inspection_method t7 ON t1.ist_id = t7.ist_id
-        LEFT JOIN info_troubleshooting t8 ON t1.ist_id = t8.ist_id
-        LEFT JOIN info_required_parts t9 ON t1.ist_id = t9.ist_id
-        LEFT JOIN info_analyze_problem t10 ON t1.ist_id = t10.ist_id
-        LEFT JOIN info_prevention_recurrence t11 ON t1.ist_id = t11.ist_id
-        LEFT JOIN info_delivery_equipment t12 ON t1.ist_id = t12.ist_id 
-       WHERE
-        t1.ist_status_flg IN ( 1, 3, 5, 7, 8 )
-       GROUP BY
-        t1.ist_id,
-        t1.ist_type,
-        t1.ist_pd,
-        t1.ist_line_cd,
-        t1.ist_area_other,
-        t1.ist_process,
-        t1.ist_tool,
-        t1.ist_job_no,
-        t1.mjt_id,
-        t1.ist_request_by,
-        t1.ist_status_flg,
-        t2.mjt_name_eng,
-        t2.mjt_name_thai,
-        t5.mts_name 
-       ORDER BY
+                
+                WHEN t1.mjt_id IS NULL THEN
+                1 ELSE 3 
+            END AS jopType_status,
+            COALESCE ( t7.iim_status_flg, 1 ) AS inspection_status,
+            COALESCE ( t8.it_status_flg, 1 ) AS troubleshooting_status,
+            COALESCE ( t9.irp_status_flg, 1 ) AS rqPart_status,
+            COALESCE ( t10.iap_status_flg, 1 ) AS analyze_status,
+            COALESCE ( t11.ipr_status_flg, 1 ) AS prevention_status,
+            COALESCE ( t12.ide_status_flg, 1 ) AS delivery_status,
+            t1.ist_status_flg 
+        FROM
+            info_issue_ticket t1
+            LEFT JOIN mst_job_type t2 ON t1.mjt_id = t2.mjt_id
+            LEFT JOIN log_manage_worker t3 ON t1.ist_id = t3.ist_id
+            LEFT JOIN sys_worker_app t4 ON t3.lmw_worker = t4.swa_id
+            LEFT JOIN mst_tooling_system t5 ON t1.ist_tool = t5.mts_id
+            LEFT JOIN info_problem_condition t6 ON t1.ist_id = t6.ist_id
+            LEFT JOIN info_inspection_method t7 ON t1.ist_id = t7.ist_id
+            LEFT JOIN info_troubleshooting t8 ON t1.ist_id = t8.ist_id
+            LEFT JOIN info_required_parts t9 ON t1.ist_id = t9.ist_id
+            LEFT JOIN info_analyze_problem t10 ON t1.ist_id = t10.ist_id
+            LEFT JOIN info_prevention_recurrence t11 ON t1.ist_id = t11.ist_id
+            LEFT JOIN info_delivery_equipment t12 ON t1.ist_id = t12.ist_id 
+        WHERE
+            t1.ist_status_flg IN ( 1, 3, 5, 7, 8 ) 
+            AND (
+            COALESCE ( t6.ipc_status_flg, 1 ) IN ( 1, 3 )) 
+            AND (
+            COALESCE ( t7.iim_status_flg, 1 ) IN ( 1, 3 )) 
+            AND (
+            COALESCE ( t8.it_status_flg, 1 ) IN ( 1, 3 )) 
+            AND (
+            COALESCE ( t9.irp_status_flg, 1 ) IN ( 1, 3 )) 
+            AND (
+            COALESCE ( t10.iap_status_flg, 1 ) IN ( 1, 3 )) 
+            AND (
+            COALESCE ( t11.ipr_status_flg, 1 ) IN ( 1, 3 )) 
+            AND (
+            COALESCE ( t12.ide_status_flg, 1 ) IN ( 1, 3 )) 
+        GROUP BY
+            t1.ist_id,
+            t1.ist_type,
+            t1.ist_pd,
+            t1.ist_line_cd,
+            t1.ist_area_other,
+            t1.ist_process,
+            t1.ist_tool,
+            t1.ist_job_no,
+            t1.mjt_id,
+            t1.ist_request_by,
+            t1.ist_status_flg,
+            t2.mjt_name_eng,
+            t2.mjt_name_thai,
+            t5.mts_name 
+    ORDER BY
         t1.ist_job_no;";
 
         $query = $this->db->query($sql);
@@ -201,7 +218,7 @@ class Ticket_control_model extends CI_Model
 
 
         if ($query->num_rows() > 0) {
-            return array('result' => true, 'data' => $data,'data_image' => $data_image);
+            return array('result' => true, 'data' => $data, 'data_image' => $data_image);
         } else {
             return array('result' => false);
         }
@@ -557,6 +574,134 @@ class Ticket_control_model extends CI_Model
         return array('result' => 0);
     }
 
+    public function show_required_parts($data)
+    {
+        $id = $data["ist_Id"];
+
+        $sql_show_pb = "SELECT 
+        t1.ist_id,
+        t2.irp_id,
+        t2.irp_name,
+        t2.irp_maker,
+        t2.irp_model,
+        t2.irp_type,
+        t2.irp_qty,
+        DATE_FORMAT(t2.irp_withdraw_time, '%Y-%m-%d') AS irp_withdraw_time,
+        t2.irp_withdraw_qty,
+        DATE_FORMAT(t2.irp_order_time, '%Y-%m-%d') AS irp_order_time,
+        t2.irp_order_qty,
+        DATE_FORMAT(t2.irp_received_time, '%Y-%m-%d') AS irp_received_time,
+        t2.irp_received_qty,
+        t2.irp_status_flg
+    FROM 
+        info_issue_ticket t1
+    LEFT JOIN
+        info_required_parts t2 ON t1.ist_id = t2.ist_id
+    WHERE
+        t1.ist_id = '$id'
+        AND (
+            t2.irp_status_flg = 1 
+            OR t2.irp_status_flg = 3
+        )
+    ";
+
+
+        $query = $this->db->query($sql_show_pb);
+        $data = $query->result();
+
+        if ($query->num_rows() > 0) {
+            return array('result' => true, 'data' => $data);
+        } else {
+            return array('result' => false);
+        }
+    }
+
+    public function save_required($data, $sess)
+    {
+        $id = $data["ist_Id"];
+
+        $sql_close_req = "UPDATE info_required_parts 
+            SET irp_status_flg = 0 , 
+            irp_updated_date = NOW() , 
+            irp_updated_by = '$sess' 
+            WHERE ist_id = '$id'";
+        $query_close_req = $this->db->query($sql_close_req);
+
+        $partRqArray = json_decode($data['rowDataArray'], true);
+        for ($i = 0; $i < count($partRqArray); $i++) {
+            $data = $partRqArray[$i];
+            $maker = $data['Maker'];
+            $model = $data['Model'];
+            $name = $data['Name'];
+            $order = $data['Order'];
+            $orderQty = $data['OrderQty'];
+            $qty = $data['Qty'];
+            $received = $data['Received'];
+            $receivedQty = $data['ReceivedQty'];
+            $stock = $data['Stock'];
+            $stockQty = $data['StockQty'];
+            $type = $data['Type'];
+
+            // ทำการ query
+            $sql_insert_req = "INSERT INTO info_required_parts (
+            ist_id,
+            irp_name,
+            irp_maker,
+            irp_model,
+            irp_type,
+            irp_qty,
+            irp_withdraw_time,
+            irp_withdraw_qty,
+            irp_order_time,
+            irp_order_qty,
+            irp_received_time,
+            irp_received_qty,
+            irp_status_flg,
+            irp_created_date,
+            irp_created_by 
+        )
+        VALUES
+            (
+                '$id',
+                '$name',
+                '$maker',
+                '$model',
+                '$type',
+                '$qty',
+                '$stock',
+                '$stockQty',
+                '$order',
+                '$orderQty',
+                '$received',
+                '$receivedQty',
+                3,
+                NOW(),
+                '$sess' 
+            )";
+
+            // ทำการ query
+            $query_insert_req = $this->db->query($sql_insert_req);
+
+            // ตรวจสอบว่า query สำเร็จหรือไม่
+            if ($this->db->affected_rows() > 0) {
+                $reqPart_status = 1;
+            } else {
+                $reqPart_status = 0;
+            }
+        }
+
+
+        if ($this->db->affected_rows() > 0) {
+            return array('result' => 1); // ส่งค่ากลับว่าการทำงานเสร็จสมบูรณ์
+        } else {
+            return array('result' => 0); // ส่งค่ากลับว่าไม่มีการอัพเดทหรือไม่สามารถอัพเดทได้
+        }
+        // หากไม่มีการอัพเดทใด ๆ สำเร็จ
+        return array('result' => 0);
+    }
+
+
+
     public function show_analyze($data)
     {
         $id = $data["ist_Id"];
@@ -654,6 +799,40 @@ class Ticket_control_model extends CI_Model
     }
 
 
+    public function show_prevention($data)
+    {
+        $id = $data["ist_Id"];
+
+        $sql_show_preven = "SELECT
+        t1.ist_id,
+        t2.ipr_id,
+        t2.ipr_suggestions,
+        t2.ipr_operated,
+        DATE_FORMAT( t2.ipr_schedule, '%Y-%m-%d' ) AS ipr_schedule,
+        t2.ipr_status_flg 
+    FROM
+        info_issue_ticket t1
+        LEFT JOIN info_prevention_recurrence t2 ON t1.ist_id = t2.ist_id 
+    WHERE
+        t1.ist_id = '$id' 
+        AND (
+            t2.ipr_status_flg = 1 
+        OR t2.ipr_status_flg = 3 
+        )";
+
+
+        $query = $this->db->query($sql_show_preven);
+        $data = $query->result();
+
+        if ($query->num_rows() > 0) {
+            return array('result' => true, 'data' => $data);
+        } else {
+            return array('result' => false);
+        }
+    }
+
+
+
     public function show_delivery($data)
     {
         $id = $data["ist_Id"];
@@ -681,11 +860,10 @@ class Ticket_control_model extends CI_Model
             return array('result' => false);
         }
     }
-// ========================================================================================
+    // ========================================================================================
 
     public function save_delivery($data, $sess)
     {
-        $analyzdetail = $data["Mdetail"];
         $id = $data["ist_Id"];
 
         // Clear previous selections
@@ -695,46 +873,33 @@ class Ticket_control_model extends CI_Model
         ide_updated_by = '$sess' 
         WHERE ist_id = '$id'");
 
-        // Insert new analyze detail
-        $this->db->query("INSERT INTO info_delivery_equipment
-                            (ist_id, 
-                            mde_id, 
-                            ide_status_flg, 
-                            ide_created_date,
-                            ide_created_by,
-                            ide_updated_date,
-                            ide_updated_by
-                            )
-                            VALUES
-                            ('$id','$analyzdetail', 3, NOW(), '$sess', NOW(), '$sess')");
 
-        // Insert checkboxes
         $checkboxes = array(
             "Checkval1", "Checkval2", "Checkval3", "Checkval4", "Checkval5",
             "Checkval6"
         );
         foreach ($checkboxes as $checkbox) {
             if (!empty($data[$checkbox])) {
-                $map_id = $data[$checkbox];
+                $mde_id = $data[$checkbox];
                 if ($checkbox === "Checkval1") {
                     // If it's Checkval11, use Detailcheck11 for iap_detail
-                    $iap_detail = $data["Detailcheck11"];
-                    $this->db->query("INSERT INTO info_analyze_problem (
+                    $ide_detail = $data["Detailcheck11"];
+                    $this->db->query("INSERT INTO info_delivery_equipment (
                                         ist_id,
-                                        map_id,
-                                        iap_detail,
-                                        iap_status_flg,
-                                        iap_created_date,
-                                        iap_created_by
-                                        ) VALUES ('$id', $map_id, '$iap_detail', 3, NOW(), '$sess')");
+                                        mde_id,
+                                        ide_detail,
+                                        ide_status_flg,
+                                        ide_created_date,
+                                        ide_created_by
+                                        ) VALUES ('$id', $mde_id, '$ide_detail', 3, NOW(), '$sess')");
                 } else {
-                    $this->db->query("INSERT INTO info_analyze_problem (
+                    $this->db->query("INSERT INTO info_delivery_equipment (
                                         ist_id,
-                                        map_id,
-                                        iap_status_flg,
-                                        iap_created_date,
-                                        iap_created_by
-                                        ) VALUES ('$id', $map_id, 3, NOW(), '$sess')");
+                                        mde_id,
+                                        ide_status_flg,
+                                        ide_created_date,
+                                        ide_created_by
+                                        ) VALUES ('$id', $mde_id, 3, NOW(), '$sess')");
                 }
             }
         }
@@ -747,7 +912,4 @@ class Ticket_control_model extends CI_Model
         // หากไม่มีการอัพเดทใด ๆ สำเร็จ
         return array('result' => 0);
     }
-
 }
-
-

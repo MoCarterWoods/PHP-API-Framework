@@ -17,7 +17,7 @@ class Mainmenu_model extends CI_Model
         smm_icon,
         smm_order_no,
         smm_status_flg,
-        DATE_FORMAT(smm_updated_date, '%Y-%m-%d') as smm_updated_date,
+        smm_updated_date,
         smm_updated_by
     FROM 
         sys_main_menu;";

@@ -129,6 +129,25 @@ class Ticket_control extends CI_Controller {
         // print_r($result);
         echo json_encode($result);
     } 
+
+    public function show_required_parts(){
+        $data = $this->input->post();
+       
+        // $data = unserialize($this->input->post('data'));
+        $result = $this->tkc->show_required_parts($data);
+        // echo "<pre>";
+        // print_r($result);
+        echo json_encode($result);
+    } 
+
+    public function save_required(){
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+        $result = $this->tkc->save_required($data,$sess);
+       
+        echo json_encode($result);
+    }
+
     public function save_analyze(){
         $data = unserialize($this->input->post('data'));
         $sess = unserialize($this->input->post('session'));
@@ -137,10 +156,18 @@ class Ticket_control extends CI_Controller {
         echo json_encode($result);
     }
 
+    public function show_prevention(){
+        $data = $this->input->post();
+       
+        $result = $this->tkc->show_prevention($data);
+        // echo "<pre>";
+        // print_r($result);
+        echo json_encode($result);
+    } 
+
     public function show_delivery(){
         $data = $this->input->post();
        
-        // $data = unserialize($this->input->post('data'));
         $result = $this->tkc->show_delivery($data);
         // echo "<pre>";
         // print_r($result);

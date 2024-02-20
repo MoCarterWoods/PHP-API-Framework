@@ -18,7 +18,7 @@ class App_ManageMenu_model extends CI_Model {
         sma_path,
         sma_order_no,
         sma_status_flg,
-        DATE_FORMAT (sma_created_date, '%Y-%m-%d') as sma_created_date,
+        IFNULL(sma_updated_date, '-') AS sma_updated_date,
         sma_created_by,
         sma_route
         FROM 

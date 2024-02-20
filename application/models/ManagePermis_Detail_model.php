@@ -34,8 +34,8 @@ class ManagePermis_Detail_model extends CI_Model {
         sys_permission_detail.spd_status_flg,
         sys_permission_detail.spd_created_date,
         sys_permission_detail.spd_created_by,
-        IFNULL(DATE_FORMAT(sys_permission_detail.spd_updated_date, '%Y-%m-%d'), '-') AS spd_updated_date,
-    COALESCE(sys_permission_detail.spd_updated_by, '-') AS spd_updated_by,
+        IFNULL(sys_permission_detail.spd_updated_date, '-') AS spd_updated_date,
+        COALESCE(sys_permission_detail.spd_updated_by, '-') AS spd_updated_by,
         sys_sub_menu.ssm_name,
         sys_main_menu.smm_name
     FROM
@@ -47,7 +47,8 @@ class ManagePermis_Detail_model extends CI_Model {
     JOIN
         sys_main_menu ON sys_sub_menu.smm_id = sys_main_menu.smm_id
     WHERE
-        sys_permission_group.spg_id = '$perid';";
+        sys_permission_group.spg_id = '$perid';
+    ";
 
         $query = $this->db->query($sql);
         $data = $query->result();
