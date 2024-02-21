@@ -58,6 +58,14 @@ class Ticket_control extends CI_Controller {
         echo json_encode($result);
     } 
 
+    public function save_equipment(){
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+        $result = $this->tkc->save_equipment($data,$sess);
+       
+        echo json_encode($result);
+    }
+
     public function chkBox_problem (){
         $result = $this->tkc->chkBox_problem();
 
@@ -178,6 +186,30 @@ class Ticket_control extends CI_Controller {
         $data = unserialize($this->input->post('data'));
         $sess = unserialize($this->input->post('session'));
         $result = $this->tkc->save_delivery($data,$sess);
+       
+        echo json_encode($result);
+    }
+
+    public function drop_worker(){
+        $data = $this->input->post();
+
+
+        $result = $this->tkc->drop_worker($data);
+       
+        echo json_encode($result);
+    }
+
+    public function all_worker(){
+
+        $result = $this->tkc->all_worker();
+       
+        echo json_encode($result);
+    }
+
+    public function save_worker(){
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+        $result = $this->tkc->save_worker($data,$sess);
        
         echo json_encode($result);
     }

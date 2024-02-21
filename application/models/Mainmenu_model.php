@@ -184,7 +184,7 @@ class Mainmenu_model extends CI_Model
         $result = $this->db->query("SELECT smm_id,smm_order_no FROM sys_main_menu");
         $res = $result->result_array();
         $i = 1;
-        $order = [];
+        $order = array();
 
         foreach ($res as $value) {
             if ($value["smm_id"] != $id) {
@@ -197,10 +197,10 @@ class Mainmenu_model extends CI_Model
                     return array('result' => 0);
                 }
             } else {
-                $order[] = [
+                $order = array (
                     'id' => $value["smm_id"],
                     'order' => $ordno
-                ];
+                );
             }
         }
         

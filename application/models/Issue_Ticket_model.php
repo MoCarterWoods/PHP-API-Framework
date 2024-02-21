@@ -245,10 +245,10 @@ class Issue_Ticket_model extends CI_Model
         $fileNames = explode(',', $prodconpic);
 
 
-        $filteredFileNames = [];
+        $filteredFileNames = array();
         foreach ($fileNames as $fileName) {
             if (!empty($fileName)) {
-                $filteredFileNames[] = $fileName;
+                $filteredFileNames [] = $fileName;
             }
         }
 

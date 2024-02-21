@@ -20,8 +20,7 @@ class Api_model extends CI_Model {
         return $data;
     }
     public function get_menu($sess) {
-        $sql = "CALL get_menu($sess)
-    ";
+        $sql = "CALL get_menu($sess)";
 
         $query = $this->db->query($sql);
         $data = $query->result();

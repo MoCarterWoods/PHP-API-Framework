@@ -179,6 +179,43 @@ class Ticket_control_model extends CI_Model
         }
     }
 
+    public function save_equipment($data, $sess)
+    {
+        $areapd = $data["AreaPd"];
+        $arealine = $data["AreaLine"];
+        $areaother = $data["AreaOther"];
+        $processfun = $data["ProcFunc"];
+        $toolsys = $data["ToolSys"];
+        $maker = $data["Maker"];
+        $model = $data["Model"];
+        $id = $data["ist_Id"];
+
+        $sql_update_equip = "UPDATE info_issue_ticket 
+        SET ist_pd = '$areapd',
+        ist_line_cd = '$arealine',
+        ist_area_other = '$areaother',
+        ist_process = '$processfun',
+        ist_tool = '$toolsys',
+        ist_maker = '$maker',
+        ist_model = '$model',
+        ist_updated_date = NOW(),
+        ist_updated_by = '$sess' 
+        WHERE
+            ist_id = '$id';";
+
+        $query_update_equip = $this->db->query($sql_update_equip);
+
+
+
+        if ($this->db->affected_rows() > 0) {
+            return array('result' => 1); // ส่งค่ากลับว่าการทำงานเสร็จสมบูรณ์
+        } else {
+            return array('result' => 0); // ส่งค่ากลับว่าไม่มีการอัพเดทหรือไม่สามารถอัพเดทได้
+        }
+        // หากไม่มีการอัพเดทใด ๆ สำเร็จ
+        return array('result' => 0);
+    }
+
     public function show_problem($data)
     {
         $id = $data["ist_Id"];
@@ -911,5 +948,77 @@ class Ticket_control_model extends CI_Model
         }
         // หากไม่มีการอัพเดทใด ๆ สำเร็จ
         return array('result' => 0);
+    }
+
+    public function drop_worker($data)
+    {
+        $id = $data["ist_Id"];
+
+        $sql_worker = "SELECT
+        t1.swa_id,
+        t1.swa_emp_code
+    FROM
+        sys_worker_app t1
+    LEFT JOIN
+        log_manage_worker t2 ON t1.swa_id = t2.lmw_worker 
+    WHERE
+        t2.ist_id = '$id' AND t2.lmw_status_flg != 0;";
+        $query = $this->db->query($sql_worker);
+        $data = $query->result();
+
+        return $data;
+    }
+
+
+    public function all_worker()
+    {
+
+        $sql_worker = "SELECT * FROM sys_worker_app WHERE swa_status_flg =1;";
+        $query = $this->db->query($sql_worker);
+        $data = $query->result();
+
+        return $data;
+    }
+
+    public function save_worker($data, $sess)
+    {
+        $id = $data["ist_Id"];
+
+        // ทำการอัปเดตข้อมูลในตาราง log_manage_worker โดยเปลี่ยน lmw_status_flg เป็น 0
+        $update_sql = "UPDATE log_manage_worker 
+        SET lmw_status_flg = 0,
+        lmw_updated_date = NOW(),
+        lmw_updated_by = '$sess' 
+        WHERE
+            ist_id = '$id'";
+        $this->db->query($update_sql);
+
+        // ทำการเตรียมข้อมูลสำหรับการเพิ่มข้อมูลใหม่
+        $swa_emp_codes = array();
+        if (isset($data['valuesOnly']) && is_array($data['valuesOnly'])) {
+            foreach ($data['valuesOnly'] as $item) {
+                $swa_emp_codes[] = $item['value'];
+            }
+        }
+
+        // เตรียมค่าสำหรับใส่ลงใน VALUES ของคำสั่ง SQL INSERT
+        $values = array();
+        foreach ($swa_emp_codes as $swa_emp_code) {
+            $values[] = "('$id', '$swa_emp_code', 3, '$sess', NOW())";
+        }
+
+        $values_str = implode(", ", $values);
+
+        // ทำการเพิ่มข้อมูลใหม่ลงในตาราง log_manage_worker
+        $insert_sql = "INSERT INTO log_manage_worker (ist_id, lmw_worker, lmw_status_flg, lmw_created_by, lmw_created_date) 
+                       VALUES $values_str";
+        $this->db->query($insert_sql);
+
+        // ตรวจสอบว่ามีการเปลี่ยนแปลงข้อมูลหรือไม่
+        if ($this->db->affected_rows() > 0) {
+            return array('result' => 1); // ส่งค่ากลับว่าการทำงานเสร็จสมบูรณ์
+        } else {
+            return array('result' => 0); // ส่งค่ากลับว่าไม่มีการอัพเดทหรือไม่สามารถอัพเดทได้
+        }
     }
 }
