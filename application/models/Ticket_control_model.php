@@ -11,7 +11,182 @@ class Ticket_control_model extends CI_Model
     }
 
 
-    public function show_data()
+    public function show_data($data)
+    {
+
+        $startdate = isset($data["selStartTime"]) ? $data["selStartTime"] : '';
+        $enddate = isset($data["selEndTime"]) ? $data["selEndTime"] : '';
+        $status = isset($data["selStatus"]) ? $data["selStatus"] : '';
+
+        if ($startdate != '' && $enddate != '') {
+            $sql = "SELECT
+                        t1.ist_id,
+                        t1.ist_type,
+                        t1.ist_pd,
+                        t1.ist_line_cd,
+                        t1.ist_area_other,
+                        t1.ist_process,
+                        t1.ist_request_by,
+                        t2.mjt_name_eng,
+                        t2.mjt_name_thai,
+                        GROUP_CONCAT( DISTINCT t3.lmw_id ) AS lmw_id,
+                        GROUP_CONCAT( DISTINCT t4.swa_fristname ) AS swa_fristname,
+                        GROUP_CONCAT( DISTINCT t4.swa_emp_code ) AS swa_emp_code,
+                        t5.mts_name,
+                        CASE
+                            WHEN t1.ist_line_cd OR t1.ist_area_other IS NULL THEN 1 ELSE 3 END AS equipment_status,
+                        COALESCE ( t6.ipc_status_flg, 1 ) AS problem_status,
+                        CASE
+                            WHEN t1.mjt_id IS NULL THEN 1 ELSE 3 END AS jopType_status,
+                        COALESCE ( t7.iim_status_flg, 1 ) AS inspection_status,
+                        COALESCE ( t8.it_status_flg, 1 ) AS troubleshooting_status,
+                        COALESCE ( t9.irp_status_flg, 1 ) AS rqPart_status,
+                        COALESCE ( t10.iap_status_flg, 1 ) AS analyze_status,
+                        COALESCE ( t11.ipr_status_flg, 1 ) AS prevention_status,
+                        COALESCE ( t12.ide_status_flg, 1 ) AS delivery_status,
+                        t1.ist_status_flg 
+                    FROM
+                        info_issue_ticket t1
+                        LEFT JOIN mst_job_type t2 ON t1.mjt_id = t2.mjt_id
+                        LEFT JOIN log_manage_worker t3 ON t1.ist_id = t3.ist_id
+                        LEFT JOIN sys_worker_app t4 ON t3.lmw_worker = t4.swa_id
+                        LEFT JOIN mst_tooling_system t5 ON t1.ist_tool = t5.mts_id
+                        LEFT JOIN info_problem_condition t6 ON t1.ist_id = t6.ist_id
+                        LEFT JOIN info_inspection_method t7 ON t1.ist_id = t7.ist_id
+                        LEFT JOIN info_troubleshooting t8 ON t1.ist_id = t8.ist_id
+                        LEFT JOIN info_required_parts t9 ON t1.ist_id = t9.ist_id
+                        LEFT JOIN info_analyze_problem t10 ON t1.ist_id = t10.ist_id
+                        LEFT JOIN info_prevention_recurrence t11 ON t1.ist_id = t11.ist_id
+                        LEFT JOIN info_delivery_equipment t12 ON t1.ist_id = t12.ist_id 
+                    WHERE
+                        t1.ist_status_flg IN ( 1, 3, 5, 7, 8 ) 
+                        AND (
+                        COALESCE ( t6.ipc_status_flg, 1 ) IN ( 1, 3 )) 
+                        AND (
+                        COALESCE ( t7.iim_status_flg, 1 ) IN ( 1, 3 )) 
+                        AND (
+                        COALESCE ( t8.it_status_flg, 1 ) IN ( 1, 3 )) 
+                        AND (
+                        COALESCE ( t9.irp_status_flg, 1 ) IN ( 1, 3 )) 
+                        AND (
+                        COALESCE ( t10.iap_status_flg, 1 ) IN ( 1, 3 )) 
+                        AND (
+                        COALESCE ( t11.ipr_status_flg, 1 ) IN ( 1, 3 )) 
+                        AND (
+                        COALESCE ( t12.ide_status_flg, 1 ) IN ( 1, 3 )) 
+                        AND DATE( t1.ist_request_time ) BETWEEN '$startdate' AND '$enddate'
+                    GROUP BY
+                        t1.ist_id,
+                        t1.ist_type,
+                        t1.ist_pd,
+                        t1.ist_line_cd,
+                        t1.ist_area_other,
+                        t1.ist_process,
+                        t1.ist_tool,
+                        t1.ist_job_no,
+                        t1.mjt_id,
+                        t1.ist_request_by,
+                        t1.ist_status_flg,
+                        t2.mjt_name_eng,
+                        t2.mjt_name_thai,
+                        t5.mts_name 
+                    ORDER BY
+                        t1.ist_job_no;";
+        } else {
+            $sql = "SELECT
+                        t1.ist_id,
+                        t1.ist_type,
+                        t1.ist_pd,
+                        t1.ist_line_cd,
+                        t1.ist_area_other,
+                        t1.ist_process,
+                        t1.ist_request_by,
+                        t2.mjt_name_eng,
+                        t2.mjt_name_thai,
+                        GROUP_CONCAT( DISTINCT t3.lmw_id ) AS lmw_id,
+                        GROUP_CONCAT( DISTINCT t4.swa_fristname ) AS swa_fristname,
+                        GROUP_CONCAT( DISTINCT t4.swa_emp_code ) AS swa_emp_code,
+                        t5.mts_name,
+                        CASE
+                            WHEN t1.ist_line_cd OR t1.ist_area_other IS NULL THEN 1 ELSE 3 END AS equipment_status,
+                        COALESCE ( t6.ipc_status_flg, 1 ) AS problem_status,
+                        CASE
+                            WHEN t1.mjt_id IS NULL THEN 1 ELSE 3 END AS jopType_status,
+                        COALESCE ( t7.iim_status_flg, 1 ) AS inspection_status,
+                        COALESCE ( t8.it_status_flg, 1 ) AS troubleshooting_status,
+                        COALESCE ( t9.irp_status_flg, 1 ) AS rqPart_status,
+                        COALESCE ( t10.iap_status_flg, 1 ) AS analyze_status,
+                        COALESCE ( t11.ipr_status_flg, 1 ) AS prevention_status,
+                        COALESCE ( t12.ide_status_flg, 1 ) AS delivery_status,
+                        t1.ist_status_flg 
+                    FROM
+                        info_issue_ticket t1
+                        LEFT JOIN mst_job_type t2 ON t1.mjt_id = t2.mjt_id
+                        LEFT JOIN log_manage_worker t3 ON t1.ist_id = t3.ist_id
+                        LEFT JOIN sys_worker_app t4 ON t3.lmw_worker = t4.swa_id
+                        LEFT JOIN mst_tooling_system t5 ON t1.ist_tool = t5.mts_id
+                        LEFT JOIN info_problem_condition t6 ON t1.ist_id = t6.ist_id
+                        LEFT JOIN info_inspection_method t7 ON t1.ist_id = t7.ist_id
+                        LEFT JOIN info_troubleshooting t8 ON t1.ist_id = t8.ist_id
+                        LEFT JOIN info_required_parts t9 ON t1.ist_id = t9.ist_id
+                        LEFT JOIN info_analyze_problem t10 ON t1.ist_id = t10.ist_id
+                        LEFT JOIN info_prevention_recurrence t11 ON t1.ist_id = t11.ist_id
+                        LEFT JOIN info_delivery_equipment t12 ON t1.ist_id = t12.ist_id 
+                    WHERE
+                        t1.ist_status_flg IN ( 1, 3, 5, 7, 8 ) 
+                        AND (
+                        COALESCE ( t6.ipc_status_flg, 1 ) IN ( 1, 3 )) 
+                        AND (
+                        COALESCE ( t7.iim_status_flg, 1 ) IN ( 1, 3 )) 
+                        AND (
+                        COALESCE ( t8.it_status_flg, 1 ) IN ( 1, 3 )) 
+                        AND (
+                        COALESCE ( t9.irp_status_flg, 1 ) IN ( 1, 3 )) 
+                        AND (
+                        COALESCE ( t10.iap_status_flg, 1 ) IN ( 1, 3 )) 
+                        AND (
+                        COALESCE ( t11.ipr_status_flg, 1 ) IN ( 1, 3 )) 
+                        AND (
+                        COALESCE ( t12.ide_status_flg, 1 ) IN ( 1, 3 )) ";
+
+            // Check if $status is empty
+            if ($status === '') {
+                // If empty, filter by current date
+                $sql .= " AND DATE(t1.ist_request_time) = CURDATE() ";
+            } else {
+                // If not empty, filter by $status
+                if ($status !== '') {
+                    $sql .= " AND t1.ist_status_flg = '$status' ";
+                }
+            }
+
+            $sql .= " GROUP BY
+                        t1.ist_id,
+                        t1.ist_type,
+                        t1.ist_pd,
+                        t1.ist_line_cd,
+                        t1.ist_area_other,
+                        t1.ist_process,
+                        t1.ist_tool,
+                        t1.ist_job_no,
+                        t1.mjt_id,
+                        t1.ist_request_by,
+                        t1.ist_status_flg,
+                        t2.mjt_name_eng,
+                        t2.mjt_name_thai,
+                        t5.mts_name 
+                    ORDER BY
+                        t1.ist_job_no DESC;";
+        }
+
+        $query = $this->db->query($sql);
+        $data = $query->result();
+        return $data;
+    }
+
+
+
+    public function show_all_data()
     {
         $sql = "SELECT
         t1.ist_id,
@@ -92,11 +267,11 @@ class Ticket_control_model extends CI_Model
             t5.mts_name 
     ORDER BY
         t1.ist_job_no;";
-
         $query = $this->db->query($sql);
         $data = $query->result();
         return $data;
     }
+
 
 
 
@@ -220,46 +395,58 @@ class Ticket_control_model extends CI_Model
     {
         $id = $data["ist_Id"];
 
-        $sql_show_pb = "SELECT 
+        $sql_show_pb = "SELECT
         t1.ist_id,
         t2.ipc_id,
         t2.mpc_id,
         t2.ipc_detail,
-        t2.ipc_pic_1,
-        t2.ipc_pic_2,
-        t2.ipc_pic_3,
-        t2.ipc_path,
-        CASE WHEN t2.mpc_id IN (7, 8, 9) THEN 'checked' ELSE NULL END AS checked
-    FROM 
+        t2.ipc_path 
+    FROM
         info_issue_ticket t1
-    LEFT JOIN
-        info_problem_condition t2 ON t1.ist_id = t2.ist_id
+        LEFT JOIN info_problem_condition t2 ON t1.ist_id = t2.ist_id 
+        LEFT JOIN mst_problem_condition t3 ON t2.mpc_id = t3.mpc_id
     WHERE
-        t1.ist_id = '$id' AND (t2.ipc_status_flg = 1 OR t2.ipc_status_flg = 3)";
+        t1.ist_id = '$id' AND t2.ipc_status_flg != 0 AND t3.mpc_type = 1";
 
         $query = $this->db->query($sql_show_pb, array($id));
         $data = $query->result();
 
-        $sql_show_image = "SELECT
-        ipc_pic_1,
-        ipc_pic_2,
-        ipc_pic_3
+        $sql_show_check = "SELECT
+        t1.ist_id,
+        t2.ipc_id,
+        t2.mpc_id,
+        t2.ipc_detail 
     FROM
-        info_problem_condition 
+        info_issue_ticket t1
+        LEFT JOIN info_problem_condition t2 ON t1.ist_id = t2.ist_id
+        LEFT JOIN mst_problem_condition t3 ON t2.mpc_id = t3.mpc_id 
     WHERE
-        ist_id = '$id' 
-        AND ipc_status_flg != 0  LIMIT 1";
+        t1.ist_id = '$id' 
+        AND t2.ipc_status_flg != 0 AND t3.mpc_type = 5";
+
+        $query = $this->db->query($sql_show_check, array($id));
+        $data_check = $query->result();
+
+        $sql_show_image = "SELECT
+            COALESCE(ipc_pic_1, '') AS ipc_pic_1,
+            COALESCE(ipc_pic_2, '') AS ipc_pic_2,
+            COALESCE(ipc_pic_3, '') AS ipc_pic_3
+        FROM
+            info_problem_condition 
+        WHERE
+            ist_id = ? 
+            AND ipc_status_flg != 0  LIMIT 1";
 
         $query_image = $this->db->query($sql_show_image, array($id));
         $data_image = $query_image->result();
 
-
         if ($query->num_rows() > 0) {
-            return array('result' => true, 'data' => $data, 'data_image' => $data_image);
+            return array('result' => true, 'data' => $data, 'data_check' => $data_check, 'data_image' => $data_image);
         } else {
             return array('result' => false);
         }
     }
+
 
     public function chkBox_problem()
     {
@@ -297,109 +484,56 @@ class Ticket_control_model extends CI_Model
 
     public function save_problem($data, $sess)
     {
+
+        $checkedValues = json_decode($data["CheckedValues"], true);
         $problem = $data["ProblemSel"];
         $detail = $data["ProblemDetail"];
-        $chk1 = $data["PbCheck1"];
-        $chk2 = $data["PbCheck2"];
-        $chk3 = $data["PbCheck3"];
         $id = $data["ist_Id"];
 
-        $sql_update_problem = "UPDATE info_issue_ticket 
-            SET mpc_id = '$problem' , ist_updated_date = NOW() , ist_updated_by = '$sess' WHERE ist_id = '$id'";
 
+
+        $sql_update_problem = "UPDATE info_issue_ticket 
+            SET mpc_id = '$problem', ist_updated_date = NOW(), ist_updated_by = '$sess' 
+            WHERE ist_id = '$id'";
         $query_update_problem = $this->db->query($sql_update_problem);
 
+
         $sql_close_problem = "UPDATE info_problem_condition 
-            SET ipc_status_flg = 0 , 
-            ipc_updated_date = NOW() , 
-            ipc_updated_by = '$sess' 
+            SET ipc_status_flg = 0, ipc_updated_date = NOW(), ipc_updated_by = '$sess' 
             WHERE ist_id = '$id'";
         $query_close_problem = $this->db->query($sql_close_problem);
 
+
         $sql_insert_problem = "INSERT INTO info_problem_condition
-            (ist_id, 
-            mpc_id, 
-            ipc_detail, 
-            ipc_status_flg, 
-            ipc_created_date, 
-            ipc_created_by,
-            ipc_updated_date,
-            ipc_updated_by
-            )
-            VALUES
-            ('$id', '$problem', '$detail', 3, NOW(), '$sess', NOW(), '$sess')";
+            (ist_id, mpc_id, ipc_detail, ipc_status_flg, ipc_created_date, 
+            ipc_created_by, ipc_updated_date, ipc_updated_by)
+            VALUES ('$id', '$problem', '$detail', 3, NOW(), '$sess', NOW(), '$sess')";
         $query_insert_problem = $this->db->query($sql_insert_problem);
 
-        if ($chk1 !== '') {
-            $sql_insert_probelm_1 = "INSERT INTO info_problem_condition
-                (ist_id, 
-                mpc_id, 
-                ipc_status_flg, 
-                ipc_created_date, 
-                ipc_created_by,
-                ipc_updated_date,
-                ipc_updated_by
-                )
-                VALUES
-                ('$id', '$chk1', 3, NOW(), '$sess', NOW(), '$sess')";
 
-            $query_insert_probelm_1 = $this->db->query($sql_insert_probelm_1);
+        if (!empty($checkedValues)) {
+            foreach ($checkedValues as $checkedValue) {
 
-            if ($this->db->affected_rows() > 0) {
-            } else {
+                $mpc_id = $checkedValue;
+
+
+                $sql_insert_problem_condition = "INSERT INTO info_problem_condition
+                    (ist_id, mpc_id, ipc_status_flg, ipc_created_date, ipc_created_by, 
+                    ipc_updated_date, ipc_updated_by)
+                    VALUES ('$id', '$mpc_id', 3, NOW(), '$sess', NOW(), '$sess')";
+
+
+                $query_insert_problem_condition = $this->db->query($sql_insert_problem_condition);
             }
         }
 
-        if ($chk2 !== '') {
-            $sql_insert_probelm_2 = "INSERT INTO info_problem_condition
-                (ist_id, 
-                mpc_id, 
-                ipc_status_flg, 
-                ipc_created_date, 
-                ipc_created_by,
-                ipc_updated_date,
-                ipc_updated_by
-                )
-                VALUES
-                ('$id', '$chk2', 3, NOW(), '$sess', NOW(), '$sess')";
-
-            $query_insert_probelm_2 = $this->db->query($sql_insert_probelm_2);
-
-            if ($this->db->affected_rows() > 0) {
-            } else {
-            }
-        }
-
-        if ($chk3 !== '') {
-            $sql_insert_probelm_3 = "INSERT INTO info_problem_condition
-                (ist_id, 
-                mpc_id, 
-                ipc_status_flg, 
-                ipc_created_date, 
-                ipc_created_by,
-                ipc_updated_date,
-                ipc_updated_by
-                )
-                VALUES
-                ('$id', '$chk3', 3, NOW(), '$sess', NOW(), '$sess')";
-
-            $query_insert_probelm_3 = $this->db->query($sql_insert_probelm_3);
-
-            if ($this->db->affected_rows() > 0) {
-            } else {
-            }
-        }
 
         if ($this->db->affected_rows() > 0) {
-            return array('result' => 1); // ส่งค่ากลับว่าการทำงานเสร็จสมบูรณ์
+            return array('result' => 1);
         } else {
-            return array('result' => 0); // ส่งค่ากลับว่าไม่มีการอัพเดทหรือไม่สามารถอัพเดทได้
+            return array('result' => 0);
         }
-        // หากไม่มีการอัพเดทใด ๆ สำเร็จ
-        return array('result' => 0);
     }
-
-
 
 
 
@@ -429,33 +563,21 @@ class Ticket_control_model extends CI_Model
 
     public function save_jobtype($data, $sess)
     {
+        $RdJobtype = $data["Jtradio1"];
         $id = $data["ist_Id"];
 
-        $radioJT = array(
-            "Jtradio1" => $data["Jtradio1"],
-            "Jtradio2" => $data["Jtradio2"],
-            "Jtradio3" => $data["Jtradio3"],
-            "Jtradio4" => $data["Jtradio4"]
-        );
+        $sql = "UPDATE info_issue_ticket
+          SET mjt_id = '$RdJobtype' ,ist_updated_date = NOW() , ist_updated_by = '$sess'
+           WHERE ist_id = '$id'";
 
-        foreach ($radioJT as $key => $value) {
-            if ($value !== '') {
-                $sql = "UPDATE info_issue_ticket
-                    SET mjt_id = ? ,ist_updated_date = NOW() , ist_updated_by = ?
-                    WHERE ist_id = ?";
 
-                $query_insert_jobtype = $this->db->query($sql, array($value, $sess, $id));
+        $query = $this->db->query($sql);
 
-                if ($this->db->affected_rows() > 0) {
-                    return array('result' => 1); // ส่งค่ากลับว่าการทำงานเสร็จสมบูรณ์
-                } else {
-                    return array('result' => 0); // ส่งค่ากลับว่าไม่มีการอัพเดทหรือไม่สามารถอัพเดทได้
-                }
-            }
+        if ($this->db->affected_rows() > 0) {
+            return array('result' => 1);
+        } else {
+            return array('result' => 0);
         }
-
-        // หากไม่มีการอัพเดทใด ๆ สำเร็จ
-        return array('result' => 0);
     }
 
 
@@ -464,23 +586,62 @@ class Ticket_control_model extends CI_Model
     {
         $id = $data["ist_Id"];
 
-        $sql_show_insp = "SELECT 
-        mim_id,
-        mim_name_eng,
-        mim_name_thai,
-        mim_status_flg,
-        mim_detail
+        $sql_show_pb = "SELECT 
+        t1.ist_id,
+        t2.iim_id,
+        t2.mim_id,
+        t2.iim_detail,
+                    t2.iim_status_flg,
+        COALESCE(t2.iim_pic_1, '') AS iim_pic_1,
+        COALESCE(t2.iim_pic_2, '') AS iim_pic_2,
+        COALESCE(t2.iim_pic_3, '') AS iim_pic_3,
+        t2.iim_path
     FROM 
-        mst_inspection_method 
-    WHERE 
-        mim_type = 1 AND mim_status_flg = 1;";
+        info_issue_ticket t1
+    LEFT JOIN
+        info_inspection_method t2 ON t1.ist_id = t2.ist_id
+            LEFT JOIN
+                    mst_inspection_method t3 ON t2.mim_id = t3.mim_id
+    WHERE
+        t1.ist_id = '$id' AND t2.iim_status_flg != 0 AND t3.mim_type = 1;";
 
-
-        $query = $this->db->query($sql_show_insp, array($id));
+        $query = $this->db->query($sql_show_pb, array($id));
         $data = $query->result();
 
+        $sql_show_pb_check = "SELECT 
+        t1.ist_id,
+        t2.iim_id,
+        t2.mim_id,
+        t2.iim_detail,
+                    t2.iim_status_flg
+    FROM 
+        info_issue_ticket t1
+    LEFT JOIN
+        info_inspection_method t2 ON t1.ist_id = t2.ist_id
+            LEFT JOIN
+                    mst_inspection_method t3 ON t2.mim_id = t3.mim_id
+    WHERE
+        t1.ist_id = '$id' AND t2.iim_status_flg != 0 AND t3.mim_type = 5;";
+
+        $query = $this->db->query($sql_show_pb_check, array($id));
+        $data_check = $query->result();
+
+        $sql_show_image = "SELECT
+        COALESCE(iim_pic_1, '') AS iim_pic_1,
+        COALESCE(iim_pic_2, '') AS iim_pic_2,
+        COALESCE(iim_pic_3, '') AS iim_pic_3
+    FROM
+        info_inspection_method 
+    WHERE
+        ist_id = ? 
+        AND iim_status_flg != 0  LIMIT 1
+                    ";
+
+        $query_image = $this->db->query($sql_show_image, array($id));
+        $data_image = $query_image->result();
+
         if ($query->num_rows() > 0) {
-            return array('result' => true, 'data' => $data);
+            return array('result' => true, 'data' => $data, 'data_check' => $data_check, 'data_image' => $data_image);
         } else {
             return array('result' => false);
         }
@@ -508,9 +669,7 @@ class Ticket_control_model extends CI_Model
     {
         $inspec = $data["InspecSel"];
         $detail = $data["InspecDetail"];
-        $chk1 = $data["InsCheck1"];
-        $chk2 = $data["InsCheck2"];
-        $chk3 = $data["InsCheck3"];
+        $checkedValues = json_decode($data["CheckedValues"], true);
         $id = $data["ist_Id"];
 
         $sql_update_inspec = "UPDATE info_issue_ticket 
@@ -539,68 +698,30 @@ class Ticket_control_model extends CI_Model
             ('$id', '$inspec', '$detail', 3, NOW(), '$sess', NOW(), '$sess')";
         $query_insert_inspec = $this->db->query($sql_insert_inspec);
 
-        if ($chk1 !== '') {
-            $sql_insert_inspec_1 = "INSERT INTO info_inspection_method
-            (ist_id, 
-            mim_id, 
-            iim_detail, 
-            iim_status_flg, 
-            iim_created_date, 
-            iim_created_by,
-            iim_updated_date,
-            iim_updated_by
-            )
-                VALUES
-                ('$id', '$chk1', 3, NOW(), '$sess', NOW(), '$sess')";
 
-            $query_insert_inspec_1 = $this->db->query($sql_insert_inspec_1);
+        if (!empty($checkedValues)) {
+            foreach ($checkedValues as $checkedValue) {
 
-            if ($this->db->affected_rows() > 0) {
-            } else {
+                $mim_id = $checkedValue;
+
+
+                $sql_insert_inspection = "INSERT INTO info_inspection_method
+                (ist_id, 
+                mim_id, 
+                iim_status_flg, 
+                iim_created_date, 
+                iim_created_by,
+                iim_updated_date,
+                iim_updated_by
+                )
+                    VALUES
+                    ('$id', '$mim_id', 3, NOW(), '$sess', NOW(), '$sess')";
+
+
+                $query_insert_inspection = $this->db->query($sql_insert_inspection);
             }
         }
 
-        if ($chk2 !== '') {
-            $sql_insert_inspec_2 = "INSERT INTO info_inspection_method
-            (ist_id, 
-            mim_id, 
-            iim_detail, 
-            iim_status_flg, 
-            iim_created_date, 
-            iim_created_by,
-            iim_updated_date,
-            iim_updated_by
-            )
-                VALUES
-                ('$id', '$chk2', 3, NOW(), '$sess', NOW(), '$sess')";
-
-            $query_insert_inspec_2 = $this->db->query($sql_insert_inspec_2);
-
-            if ($this->db->affected_rows() > 0) {
-            } else {
-            }
-        }
-
-        if ($chk3 !== '') {
-            $sql_insert_inspec_3 = "INSERT INTO info_inspection_method
-            (ist_id, 
-            mim_id, 
-            iim_detail, 
-            iim_status_flg, 
-            iim_created_date, 
-            iim_created_by,
-            iim_updated_date,
-            iim_updated_by
-            )
-                VALUES
-                ('$id', '$chk3', 3, NOW(), '$sess', NOW(), '$sess')";
-
-            $query_insert_inspec_3 = $this->db->query($sql_insert_inspec_3);
-
-            if ($this->db->affected_rows() > 0) {
-            } else {
-            }
-        }
 
         if ($this->db->affected_rows() > 0) {
             return array('result' => 1); // ส่งค่ากลับว่าการทำงานเสร็จสมบูรณ์
@@ -610,6 +731,175 @@ class Ticket_control_model extends CI_Model
         // หากไม่มีการอัพเดทใด ๆ สำเร็จ
         return array('result' => 0);
     }
+
+
+    public function show_trouble($data)
+    {
+        $id = $data["ist_Id"];
+
+
+        $sql_show_pb = "SELECT
+        t1.ist_id,
+        t2.it_id,
+        t2.mt_id,
+        t2.it_detail,
+        t2.it_path 
+    FROM
+        info_issue_ticket t1
+        LEFT JOIN info_troubleshooting t2 ON t1.ist_id = t2.ist_id 
+        LEFT JOIN mst_troubleshooting t3 ON t2.mt_id = t3.mt_id
+    WHERE
+        t1.ist_id = '$id' AND t2.it_status_flg != 0 AND t3.mt_type = 1";
+
+        $query = $this->db->query($sql_show_pb, array($id));
+        $data = $query->result();
+
+        $sql_show_check1 = "SELECT
+        t1.ist_id,
+        t2.it_id,
+        t2.mt_id,
+        t2.it_detail 
+    FROM
+        info_issue_ticket t1
+        LEFT JOIN info_troubleshooting t2 ON t1.ist_id = t2.ist_id
+        LEFT JOIN mst_troubleshooting t3 ON t2.mt_id = t3.mt_id 
+    WHERE
+        t1.ist_id = '$id' 
+        AND t2.it_status_flg != 0 AND t3.mt_type = 2";
+
+        $query_check = $this->db->query($sql_show_check1, array($id));
+        $data_check1 = $query_check->result();
+
+
+
+        $sql_show_check2 = "SELECT
+        t1.ist_id,
+        t2.it_id,
+        t2.mt_id,
+        t2.it_detail 
+    FROM
+        info_issue_ticket t1
+        LEFT JOIN info_troubleshooting t2 ON t1.ist_id = t2.ist_id
+        LEFT JOIN mst_troubleshooting t3 ON t2.mt_id = t3.mt_id 
+    WHERE
+        t1.ist_id = '$id'
+        AND t2.it_status_flg != 0 AND t3.mt_type = 5";
+
+        $query_check = $this->db->query($sql_show_check2, array($id));
+        $data_check2 = $query_check->result();
+
+        $sql_show_image = "SELECT
+        COALESCE(iim_pic_1, '') AS iim_pic_1,
+        COALESCE(iim_pic_2, '') AS iim_pic_2,
+        COALESCE(iim_pic_3, '') AS iim_pic_3
+    FROM
+        info_inspection_method 
+    WHERE
+        ist_id = ? 
+        AND iim_status_flg != 0  LIMIT 1
+                    ";
+
+        $query_image = $this->db->query($sql_show_image, array($id));
+        $data_image = $query_image->result();
+
+        if ($query->num_rows() > 0) {
+            return array('result' => true, 'data' => $data, 'data_check1' => $data_check1, 'data_check2' => $data_check2, 'data_image' => $data_image);
+        } else {
+            return array('result' => false);
+        }
+    }
+
+    public function save_trobles($data, $sess)
+    {
+        // Extract necessary data
+        $troub = $data["Trobles"];
+        $troubdetail = $data["TroblesDetail"];
+        $id = $data["ist_Id"];
+        $checkedValues1 = json_decode($data["CheckedValues1"], true);
+        $checkedValues2 = json_decode($data["CheckedValues2"], true);
+
+        // Extract checkboxes and details from CheckedValues2
+        $checkboxes2 = array();
+        $details2 = array();
+        foreach ($checkedValues2 as $value) {
+            $checkboxes2[] = $value["checkbox"];
+            $details2[] = $value["detail"];
+        }
+
+        // Update existing troubleshooting entry
+        $sql_update_troub = "UPDATE info_issue_ticket 
+            SET mt_id = '$troub' , ist_updated_date = NOW() , ist_updated_by = '$sess' WHERE ist_id = '$id'";
+        $query_update_troub = $this->db->query($sql_update_troub);
+
+        // Close existing troubleshooting entry
+        $sql_close_troub = "UPDATE info_troubleshooting 
+            SET it_status_flg = 0 , 
+            it_updated_date = NOW() , 
+            it_updated_by = '$sess' 
+            WHERE ist_id = '$id'";
+        $query_close_troub = $this->db->query($sql_close_troub);
+
+        // Insert new troubleshooting entry
+        $sql_insert_troub = "INSERT INTO info_troubleshooting
+            (ist_id, 
+            mt_id, 
+            it_detail, 
+            it_status_flg, 
+            it_created_date, 
+            it_created_by,
+            it_updated_date,
+            it_updated_by
+            )
+            VALUES
+            ('$id', '$troub', '$troubdetail', 3, NOW(), '$sess', NOW(), '$sess')";
+        $query_insert_troub = $this->db->query($sql_insert_troub);
+
+        // Insert new troubleshooting entries for CheckedValues1
+        if (!empty($checkedValues1)) {
+            foreach ($checkedValues1 as $mt_id) {
+                $sql_update_check1 = "INSERT INTO info_troubleshooting
+                (ist_id, 
+                mt_id,
+                it_status_flg,
+                it_created_date,
+                it_created_by,
+                it_updated_date,
+                it_updated_by
+                )
+                VALUES
+                ('$id', '$mt_id', 3, NOW(), '$sess', NOW(), '$sess')";
+                $query_update_check1 = $this->db->query($sql_update_check1);
+            }
+        }
+
+        // Insert new troubleshooting entries for CheckedValues2
+        if (!empty($checkboxes2) && !empty($details2) && count($checkboxes2) === count($details2)) {
+            foreach ($checkboxes2 as $key => $checkbox) {
+                $detail = $details2[$key];
+                $sql_update_check2 = "INSERT INTO info_troubleshooting
+                (ist_id, 
+                mt_id,
+                it_detail,
+                it_status_flg,
+                it_created_date,
+                it_created_by,
+                it_updated_date,
+                it_updated_by
+                )
+                VALUES
+                ('$id', '$checkbox', '$detail', 3, NOW(), '$sess', NOW(), '$sess')";
+                $query_update_check2 = $this->db->query($sql_update_check2);
+            }
+        }
+
+        // Check if any rows were affected
+        if ($this->db->affected_rows() > 0) {
+            return array('result' => 1);
+        } else {
+            return array('result' => 0);
+        }
+    }
+
 
     public function show_required_parts($data)
     {
@@ -772,16 +1062,15 @@ class Ticket_control_model extends CI_Model
 
     public function save_analyze($data, $sess)
     {
-        $analyzdetail = $data["Mdetail"];
         $id = $data["ist_Id"];
-
+    
         // Clear previous selections
         $this->db->query("UPDATE info_analyze_problem 
                             SET iap_status_flg = 0 , 
                             iap_updated_date = NOW() , 
                             iap_updated_by = '$sess' 
                             WHERE ist_id = '$id'");
-
+    
         // Insert new analyze detail
         $this->db->query("INSERT INTO info_analyze_problem
                             (ist_id, 
@@ -793,39 +1082,32 @@ class Ticket_control_model extends CI_Model
                             iap_updated_by
                             )
                             VALUES
-                            ('$id','$analyzdetail', 3, NOW(), '$sess', NOW(), '$sess')");
-
+                            ('$id', '{$data['Mdetail']}', 3, NOW(), '$sess', NOW(), '$sess')");
+    
         // Insert checkboxes
-        $checkboxes = array(
-            "Checkval1", "Checkval2", "Checkval3", "Checkval4", "Checkval5",
-            "Checkval6", "Checkval7", "Checkval8", "Checkval9", "Checkval10", "Checkval11"
-        );
-        foreach ($checkboxes as $checkbox) {
-            if (!empty($data[$checkbox])) {
-                $map_id = $data[$checkbox];
-                if ($checkbox === "Checkval11") {
-                    // If it's Checkval11, use Detailcheck11 for iap_detail
-                    $iap_detail = $data["Detailcheck11"];
-                    $this->db->query("INSERT INTO info_analyze_problem (
-                                        ist_id,
-                                        map_id,
-                                        iap_detail,
-                                        iap_status_flg,
-                                        iap_created_date,
-                                        iap_created_by
-                                        ) VALUES ('$id', $map_id, '$iap_detail', 3, NOW(), '$sess')");
-                } else {
-                    $this->db->query("INSERT INTO info_analyze_problem (
-                                        ist_id,
-                                        map_id,
-                                        iap_status_flg,
-                                        iap_created_date,
-                                        iap_created_by
-                                        ) VALUES ('$id', $map_id, 3, NOW(), '$sess')");
-                }
+        foreach ($data['checkboxes'] as $map_id) {
+            if ($map_id == '11') {
+                // If it's checkbox 11, use Detailcheck11 for iap_detail
+                $iap_detail = !empty($data["details"]) ? $data["details"] : null;
+                $this->db->query("INSERT INTO info_analyze_problem (
+                                    ist_id,
+                                    map_id,
+                                    iap_detail,
+                                    iap_status_flg,
+                                    iap_created_date,
+                                    iap_created_by
+                                    ) VALUES ('$id', $map_id, '$iap_detail', 3, NOW(), '$sess')");
+            } else {
+                $this->db->query("INSERT INTO info_analyze_problem (
+                                    ist_id,
+                                    map_id,
+                                    iap_status_flg,
+                                    iap_created_date,
+                                    iap_created_by
+                                    ) VALUES ('$id', $map_id, 3, NOW(), '$sess')");
             }
         }
-
+    
         if ($this->db->affected_rows() > 0) {
             return array('result' => 1); // ส่งค่ากลับว่าการทำงานเสร็จสมบูรณ์
         } else {
@@ -834,6 +1116,8 @@ class Ticket_control_model extends CI_Model
         // หากไม่มีการอัพเดทใด ๆ สำเร็จ
         return array('result' => 0);
     }
+    
+
 
 
     public function show_prevention($data)
@@ -902,45 +1186,41 @@ class Ticket_control_model extends CI_Model
     public function save_delivery($data, $sess)
     {
         $id = $data["ist_Id"];
-
+    
         // Clear previous selections
         $this->db->query("UPDATE info_delivery_equipment 
-        SET ide_status_flg = 0 , 
-        ide_updated_date = NOW() , 
-        ide_updated_by = '$sess' 
-        WHERE ist_id = '$id'");
-
-
+            SET ide_status_flg = 0 , 
+            ide_updated_date = NOW() , 
+            ide_updated_by = '$sess' 
+            WHERE ist_id = '$id'");
+    
+        // Get detail for Checkbox 1 if it's checked
+        $ide_detail1 = !empty($data["details"][0]) ? $data["details"][0] : null;
+    
         $checkboxes = array(
             "Checkval1", "Checkval2", "Checkval3", "Checkval4", "Checkval5",
             "Checkval6"
         );
-        foreach ($checkboxes as $checkbox) {
-            if (!empty($data[$checkbox])) {
-                $mde_id = $data[$checkbox];
+        foreach ($checkboxes as $index => $checkbox) {
+            if (!empty($data["checkboxes"][$index])) {
+                $mde_id = $data["checkboxes"][$index];
                 if ($checkbox === "Checkval1") {
-                    // If it's Checkval11, use Detailcheck11 for iap_detail
-                    $ide_detail = $data["Detailcheck11"];
-                    $this->db->query("INSERT INTO info_delivery_equipment (
-                                        ist_id,
-                                        mde_id,
-                                        ide_detail,
-                                        ide_status_flg,
-                                        ide_created_date,
-                                        ide_created_by
-                                        ) VALUES ('$id', $mde_id, '$ide_detail', 3, NOW(), '$sess')");
+                    // Use the previously fetched detail for Checkbox 1
+                    $ide_detail = $ide_detail1;
                 } else {
-                    $this->db->query("INSERT INTO info_delivery_equipment (
-                                        ist_id,
-                                        mde_id,
-                                        ide_status_flg,
-                                        ide_created_date,
-                                        ide_created_by
-                                        ) VALUES ('$id', $mde_id, 3, NOW(), '$sess')");
+                    $ide_detail = null; // Detail for other checkboxes is set to null
                 }
+                $this->db->query("INSERT INTO info_delivery_equipment (
+                                    ist_id,
+                                    mde_id,
+                                    ide_detail,
+                                    ide_status_flg,
+                                    ide_created_date,
+                                    ide_created_by
+                                    ) VALUES ('$id', $mde_id, '$ide_detail', 3, NOW(), '$sess')");
             }
         }
-
+    
         if ($this->db->affected_rows() > 0) {
             return array('result' => 1); // ส่งค่ากลับว่าการทำงานเสร็จสมบูรณ์
         } else {
@@ -949,6 +1229,7 @@ class Ticket_control_model extends CI_Model
         // หากไม่มีการอัพเดทใด ๆ สำเร็จ
         return array('result' => 0);
     }
+    
 
     public function drop_worker($data)
     {

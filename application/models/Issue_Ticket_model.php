@@ -275,7 +275,7 @@ class Issue_Ticket_model extends CI_Model
         $insfileNames = explode(',', $inspecpic);
 
 
-        $insfilteredFileNames = [];
+        $insfilteredFileNames = array();
         foreach ($insfileNames as $insfileName) {
             if (!empty($insfileName)) {
                 $insfilteredFileNames[] = $insfileName;
@@ -305,7 +305,7 @@ class Issue_Ticket_model extends CI_Model
         $troubfileNames = explode(',', $troublepic);
 
 
-        $troubfilteredFileNames = [];
+        $troubfilteredFileNames = array();
         foreach ($troubfileNames as $troubfileName) {
             if (!empty($troubfileName)) {
                 $troubfilteredFileNames[] = $troubfileName;
@@ -349,7 +349,7 @@ class Issue_Ticket_model extends CI_Model
         $analyzfileNames = explode(',', $analyzpic);
 
 
-        $analyzFileNames = [];
+        $analyzFileNames = array();
         foreach ($analyzfileNames as $anafileName) {
             if (!empty($anafileName)) {
                 $analyzFileNames[] = $anafileName;
@@ -949,9 +949,11 @@ class Issue_Ticket_model extends CI_Model
                 $prevenArray = json_decode($data['PreventionallValues'], true);
                 foreach ($prevenArray as $value) {
                     // ใช้ array_values() เพื่อดึงค่าทั้งหมดในแต่ละอาร์เรย์
-                    $suggest = $value[array_keys($value)[0]];
-                    $operated = $value[array_keys($value)[1]];
-                    $schedul = $value[array_keys($value)[2]];
+                    $keys = array_keys($value);
+                    $suggest = $value[$keys[0]];
+                    $operated = $value[$keys[1]];
+                    $schedul = $value[$keys[2]];
+                    
 
                     // ทำการ query
                     $sql_insert_prevention = "INSERT INTO info_prevention_recurrence (

@@ -97,10 +97,10 @@ class Mainmenu_model extends CI_Model
         $id = $data["mmnId"];
         $ordno = $data["OrderNo"];
 
-        $sql = "UPDATE sys_main_menu SET smm_order_no = $ordno  WHERE  smm_id = $id ";
+        $sql = "UPDATE sys_main_menu SET smm_order_no = '$ordno' , smm_updated_date = NOW(), smm_updated_by = '$sess'  WHERE  smm_id = $id ";
         $query_update = $this->db->query($sql);
 
-        $sql1 = "SELECT * FROM sys_main_menu WHERE smm_order_no >= $ordno  AND smm_id != $id ORDER BY smm_id ASC";
+        $sql1 = "SELECT * FROM sys_main_menu WHERE smm_order_no >= '$ordno'  AND smm_id != '$id' ORDER BY smm_id ASC";
         $query1 = $this->db->query($sql1);
         $row1 = $query1->result_array();
 
@@ -117,7 +117,11 @@ class Mainmenu_model extends CI_Model
             $Neworder =  $Neworder + 1;
 
             if ($gid) {
-                $sqlUpdate = "UPDATE sys_main_menu SET smm_order_no = $Neworder  WHERE smm_id = $gid";
+                $sqlUpdate = "UPDATE sys_main_menu 
+                SET smm_order_no = '$Neworder', 
+                    smm_updated_date = NOW(), 
+                    smm_updated_by = '$sess'  
+                WHERE smm_id = '$gid'";
             }
 
             $queryUpdate = $this->db->query($sqlUpdate);
@@ -133,14 +137,17 @@ class Mainmenu_model extends CI_Model
         $ordno = $data["OrderNo"];
         $id = $data["mmnId"];
 
-        $checkEdit = $this->checkEditMainMenu($data);
+        $checkEdit = $this->checkEditMainMenu($data,$sess);
 
         if (!$checkEdit) {
-            $sql = "UPDATE sys_main_menu SET smm_name = '$mmname', smm_icon = '$mmicon', smm_order_no = '$ordno', smm_updated_date = NOW(), smm_updated_by = '$sess' WHERE smm_id = '$id'";
+            $sql = "UPDATE sys_main_menu 
+            SET smm_name = '$mmname', smm_icon = '$mmicon', 
+            smm_order_no = '$ordno', smm_updated_date = NOW(), smm_updated_by = '$sess' 
+            WHERE smm_id = '$id'";
             $result = $this->db->query($sql);
 
             if ($this->db->affected_rows() > 0) {
-                $this->orderNo($data);
+                $this->orderNo($data,$sess);
                 return array(
                     'result' => 1,
                     'massage' => 'edit main menu success'
@@ -159,7 +166,7 @@ class Mainmenu_model extends CI_Model
         }
     }
 
-    public function checkEditMainMenu($data)
+    public function checkEditMainMenu($data,$sess)
     {
         $id = $data["mmnId"];
         $mmname = $data["MainMenuName"];
@@ -176,7 +183,7 @@ class Mainmenu_model extends CI_Model
         }
     }
 
-    public function orderNo($data)
+    public function orderNo($data,$sess)
     {
         $id = $data["mmnId"];
         $ordno = $data["OrderNo"];
@@ -189,7 +196,7 @@ class Mainmenu_model extends CI_Model
         foreach ($res as $value) {
             if ($value["smm_id"] != $id) {
                 $i = $i == $ordno ? ++$i : $i;
-                $result = $this->db->query("UPDATE sys_main_menu SET smm_order_no = '$i' WHERE smm_id = '{$value['smm_id']}'");
+                $result = $this->db->query("UPDATE sys_main_menu SET smm_order_no = '$i', smm_updated_date = NOW() , smm_updated_by = '$sess' WHERE smm_id = '{$value['smm_id']}'");
                 $i++;
         
                 // ตรวจสอบการอัปเดตข้อมูล
