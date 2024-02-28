@@ -14,6 +14,7 @@ class Issue_Ticket_model extends CI_Model
 
     public function drop_job_type()
     {
+
         $sql_job_type = "SELECT 
         mjt_id,
         mjt_name_eng,
@@ -53,18 +54,25 @@ class Issue_Ticket_model extends CI_Model
     }
 
 
-    public function drop_problem()
+    public function drop_problem($selectedValue)
     {
+
         $sql_tool = "SELECT 
-        mpc_id,
-        mpc_name_eng,
-        mpc_name_thai,
-        mpc_status_flg,
-        mpc_detail
+        t1.mpc_id,
+        t1.mpc_name_eng,
+        t1.mpc_name_thai,
+        t1.mpc_status_flg,
+        t1.mpc_detail
     FROM 
-        mst_problem_condition 
+        mst_problem_condition t1
+    LEFT JOIN
+        mst_manage_worksheet t2 ON t1.mpc_id = t2.mpc_id
     WHERE 
-        mpc_type = 1 AND mpc_status_flg = 1;";
+        t1.mpc_type = 1 AND 
+        t1.mpc_status_flg = 1 AND 
+            t2.mjt_id = '$selectedValue' AND
+        t2.mpc_id IS NOT NULL AND
+            t2.mmw_status_flg = 1";
         $query = $this->db->query($sql_tool);
         $data = $query->result();
 
@@ -105,18 +113,24 @@ class Issue_Ticket_model extends CI_Model
         return $data;
     }
 
-    public function drop_inspec_method()
+    public function drop_inspec_method($selectedValue)
     {
         $sql_inspec = "SELECT 
-        mim_id,
-        mim_name_eng,
-        mim_name_thai,
-        mim_status_flg,
-        mim_detail
-    FROM 
-        mst_inspection_method 
-    WHERE 
-        mim_type = 1 AND mim_status_flg = 1;";
+        t1.mim_id,
+        t1.mim_name_eng,
+        t1.mim_name_thai,
+        t1.mim_status_flg,
+        t1.mim_detail
+        FROM 
+        mst_inspection_method t1
+        LEFT JOIN
+        mst_manage_worksheet t2 ON t1.mim_id = t2.mim_id
+        WHERE 
+        t1.mim_type = 1 AND 
+        t1.mim_status_flg = 1 AND 
+        t2.mjt_id = '$selectedValue' AND
+        t2.mim_id IS NOT NULL AND
+        t2.mmw_status_flg = 1;";
         $query = $this->db->query($sql_inspec);
         $data = $query->result();
 
@@ -141,14 +155,23 @@ class Issue_Ticket_model extends CI_Model
         return $data;
     }
 
-    public function drop_trouble()
+    public function drop_trouble($selectedValue)
     {
-        $sql_trouble = "SELECT mt_id,
-        mt_name_eng,
-        mt_name_thai,
-        mt_detail
-        FROM mst_troubleshooting 
-		WHERE mt_status_flg =1 AND mt_type =1";
+        $sql_trouble = "SELECT 
+        t1.mt_id,
+        t1.mt_name_eng,
+        t1.mt_name_thai,
+        t1.mt_detail
+        FROM 
+        mst_troubleshooting t1
+        LEFT JOIN
+        mst_manage_worksheet t2 ON t1.mt_id = t2.mt_id
+        WHERE 
+        t1.mt_type = 1 AND 
+        t1.mt_status_flg = 1 AND 
+        t2.mjt_id = '$selectedValue' AND
+        t2.mt_id IS NOT NULL AND
+        t2.mmw_status_flg = 1";
         $query = $this->db->query($sql_trouble);
         $data = $query->result();
 

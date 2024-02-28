@@ -397,6 +397,7 @@ class Ticket_control_model extends CI_Model
 
         $sql_show_pb = "SELECT
         t1.ist_id,
+		t1.mjt_id,
         t2.ipc_id,
         t2.mpc_id,
         t2.ipc_detail,
@@ -588,6 +589,7 @@ class Ticket_control_model extends CI_Model
 
         $sql_show_pb = "SELECT 
         t1.ist_id,
+        t1.mjt_id,
         t2.iim_id,
         t2.mim_id,
         t2.iim_detail,
@@ -740,6 +742,7 @@ class Ticket_control_model extends CI_Model
 
         $sql_show_pb = "SELECT
         t1.ist_id,
+        t1.mjt_id,
         t2.it_id,
         t2.mt_id,
         t2.it_detail,
@@ -1296,6 +1299,36 @@ class Ticket_control_model extends CI_Model
         $this->db->query($insert_sql);
 
         // ตรวจสอบว่ามีการเปลี่ยนแปลงข้อมูลหรือไม่
+        if ($this->db->affected_rows() > 0) {
+            return array('result' => 1); // ส่งค่ากลับว่าการทำงานเสร็จสมบูรณ์
+        } else {
+            return array('result' => 0); // ส่งค่ากลับว่าไม่มีการอัพเดทหรือไม่สามารถอัพเดทได้
+        }
+    }
+
+
+    public function jobtype_id($id)
+    {
+        $sql_jobtype_id = "SELECT mjt_id
+        FROM
+        info_issue_ticket
+        WHERE ist_id = '$id';";
+        $query = $this->db->query($sql_jobtype_id);
+        $data = $query->result();
+
+        return $data;
+    }
+
+    public function submit_ticket($data, $sess)
+    {
+        $id = $data["ist_Id"];
+    
+        $sql_submit_ticket = "UPDATE info_issue_ticket 
+            SET ist_status_flg = 7, ist_updated_date = NOW(), 
+            ist_updated_by = '$sess'
+            WHERE ist_id = '$id';";
+        $query = $this->db->query($sql_submit_ticket);
+    
         if ($this->db->affected_rows() > 0) {
             return array('result' => 1); // ส่งค่ากลับว่าการทำงานเสร็จสมบูรณ์
         } else {

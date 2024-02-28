@@ -267,4 +267,13 @@ class Ticket_control extends CI_Controller
 
         echo json_encode($result);
     }
+
+    public function submit_ticket()
+    {
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+        $result = $this->tkc->submit_ticket($data, $sess);
+
+        echo json_encode($result);
+    }
 }

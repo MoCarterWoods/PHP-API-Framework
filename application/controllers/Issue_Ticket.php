@@ -30,10 +30,13 @@ class Issue_Ticket extends CI_Controller {
     } 
 
     public function drop_problem (){
-        $result = $this->iss->drop_problem();
-
+        $selectedValue = $this->input->get('selectedValue');
+    
+        $result = $this->iss->drop_problem($selectedValue);
+    
         echo json_encode($result);
-    } 
+    }
+    
 
     public function chkBox_problem (){
         $result = $this->iss->chkBox_problem();
@@ -48,7 +51,10 @@ class Issue_Ticket extends CI_Controller {
     } 
 
     public function drop_inspec_method (){
-        $result = $this->iss->drop_inspec_method();
+
+        $selectedValue = $this->input->get('selectedValue');
+
+        $result = $this->iss->drop_inspec_method($selectedValue);
 
         echo json_encode($result);
     } 
@@ -60,7 +66,9 @@ class Issue_Ticket extends CI_Controller {
     } 
 
     public function drop_trouble (){
-        $result = $this->iss->drop_trouble();
+        $selectedValue = $this->input->get('selectedValue');
+
+        $result = $this->iss->drop_trouble($selectedValue);
 
         echo json_encode($result);
     } 
@@ -108,5 +116,13 @@ class Issue_Ticket extends CI_Controller {
         $result = $this->iss->save_issue($data, $sess);
         echo json_encode($result);
     }
+
+
+    public function jobtype_id (){
+        $id = $this->input->get('ist_Id');
+        $result = $this->iss->jobtype_id($id);
+
+        echo json_encode($result);
+    } 
     
 }

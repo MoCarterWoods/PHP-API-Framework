@@ -1,60 +1,84 @@
-$(document).on('click', '#btnSearch', function () {
-    var inpStartDate = $('#inpStartDate').val();
-    var inpEndDate = $('#inpEndDate').val();
-    var apiUrl = 'http://127.0.0.1/api/Remaining_Approval/show_data_list';
+
+
+// ----=- show problem --------
+$(document).on('click', '.actProblem', function () {
+    ist_Id = $(this).attr('data-id');
+    var url = API_URL + "Ticket_control/show_problem";
+
     $.ajax({
-        url: apiUrl,
+        url: url,
         type: 'POST',
-        data: {
-            inpStartDate: inpStartDate,
-            inpEndDate: inpEndDate
-        },
+        data: { ist_Id: ist_Id },
         dataType: 'json',
-        success: function (data) {
+        success: function (response) {
+            console.log(response);
 
-            var html = "";
-            // Loop through the data and append menu items
-            for (var i = 0; i < data.length; i++) {
+            $('#SelProblem').val('');
+            $('#mdetailprdlm').val('');
+            $('.customCheckpb').prop('checked', false);
 
-                html += `
-                <tr>
-                <td class="text-center">${i + 1}</td>
-                <td class="text-center">${data[i].ist_line_cd == '' ? ${data[i].ist_area_other} : `${data[i].ist_line_cd}`}</td>
-                <td class="text-center">${data[i].mts_name === null ? '-' : data[i].mts_name}</td>
-                <td class="text-center">${data[i].ist_process === null ? '-' : data[i].ist_process}</td>
-                <td class="text-center">
-                    <div class="text-center">${data[i].mjt_name_thai === null ? '-' : data[i].mjt_name_thai}</div>
-                    <div class="text-center">${data[i].mjt_name_eng === null ? '-' : data[i].mjt_name_eng}</div>
-                </td>
-                <td class="text-center">${data[i].ist_date === null ? '-' : data[i].ist_date}</td>
-                <td class="text-center">
-                    <div class="text-center"><small class="emp_post text-truncate text-muted">${data[i].ist_request_by}</small></div>
-                    <div class="text-center">${data[i].ist_type == 1 ? 'APPLICATION' : 'WEBSITE'}</div></td>
-                <td class="text-center">${data[i].swa_emp_code === null ? '-' : data[i].swa_emp_code.split(",").join(" | ")}</td>
-                <td class="text-center"><span class="badge bg-label-${data[i].ist_status_flg == 7 ? 'info' : 'Unknown'}"> ${data[i].ist_status_flg == 7 ? 'Wait Approval' : 'Unknown'}</span> </td>
-                <td class="text-center">
-                    <button class="btn btn-secondary">Detail</button>
-                    <button class="btn btn-primary" id="btnApprove"  me-1" id="flgStatus" data-sa-id="${data[i].ist_id}">Confirm</button>
-                    <button  class="btnDeny btn-danger btn" data-bs-toggle="modal" data-bs-target="#mdlDeny" me-1" id="flgStatus" data-dy-id="${data[i].ist_id}">Deny</button>
-                </td>
-            </tr>
-            `;
+            var selectedValue = response.data[0].mjt_id; // ค่าที่ต้องการส่งไปยัง ProbConDropdown
+            ProbConDropdown(selectedValue, function() {
+                // ทำงานที่ต้องการหลังจาก ProbConDropdown เสร็จสิ้น
+                response.data_check.forEach(function (problem) {
+                    $('#customCheckpb' + problem.mpc_id).prop('checked', true);
+                });
 
-                // เรียกใช้งาน generateAvatarHTML เพื่อสร้าง HTML สำหรับ avatar
-                var avatarHtml = generateAvatarHTML(data, i);
-                $(`#avatarGroup_${i}`).html(avatarHtml);
-            }
+                $('#SelProblem').val(response.data[0].mpc_id);
+                $('#mdetailprdlm').val(response.data[0].ipc_detail);
 
-            // ทำลาย DataTable ที่มีอยู่ก่อนที่จะปรับปรุงเนื้อหาของตาราง
-            $('#tblRemainingApproval').DataTable().destroy();
+                var data_image = response.data_image[0];
+                var maxFilesAllowed = 3;
+                var e = `<div class="dz-preview dz-success dz-processing dz-image-preview dz-complete">
+                            <div class="dz-details">
+                                <div class="dz-thumbnail">
+                                    <img data-dz-thumbnail>
+                                    <span class="dz-nopreview">No preview</span>
+                                    <div class="dz-success-mark"></div>
+                                    <div class="dz-error-mark"></div>
+                                    <div class="dz-error-message"><span data-dz-errormessage></span></div>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-dz-uploadprogress></div>
+                                    </div>
+                                </div>
+                                <div class="dz-filename" data-dz-name></div>
+                                <div class="dz-size" data-dz-size></div>
+                            </div>
+                        </div>`;
+                Dropzone.autoDiscover = false;
+                var myDropzone = new Dropzone("#myDropzone", {
+                    previewTemplate: e,
+                    url: '/upload',
+                    acceptedFiles: 'image/*',
+                    maxFiles: maxFilesAllowed,
+                    init: function () {
+                        this.on("addedfile", function () {
+                            if (this.files.length > this.options.maxFiles) {
+                                this.removeFile(this.files[0]);
+                            }
+                        });
+                    },
+                    addRemoveLinks: true,
+                    dictDefaultMessage: 'Drop your image here or click to upload',
+                    parallelUploads: 1,
+                });
 
-            // ปรับปรุงเนื้อหาของตารางและเริ่มใช้ DataTable ใหม่
-            $("#tbody").html(html).promise().done(() => {
-                $("#tblRemainingApproval").DataTable({ scrollX: true });
+                var filesCount = 0;
+                for (let i = 1; i <= 3; i++) {
+                    var imageName = data_image['ipc_pic_' + i];
+                    if (imageName != '') {
+                        var imagePath = base_url('/assets/img/upload/problem/' + imageName);
+                        let mockFile = { name: `${imageName}`, size: 12345 };
+                        myDropzone.emit("addedfile", mockFile);
+                        myDropzone.emit("thumbnail", mockFile, imagePath);
+                        myDropzone.emit("complete", mockFile);
+                        filesCount++;
+                    }
+                }
             });
         },
-        error: function (xhr, status, error) {
-            console.error('Error:', error);
+        error: function (error) {
+            console.error('Error fetching data from the API:', error);
         }
     });
 });
