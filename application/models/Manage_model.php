@@ -25,13 +25,13 @@ class Manage_model extends CI_Model {
     
 
     public function show_drop_down() {
-    $sql1 = "SELECT spg_id,spg_name From sys_permission_group";
+    $sql1 = "SELECT spg_id,spg_name FROM sys_permission_group WHERE spg_status_flg = 1";
         $query = $this->db->query($sql1);
        
         foreach ($query->result() as $key => $value) {
             $arr['permission'][] = $value;
         }
-        $sql2 = "SELECT mpc_id,mpc_code,mpc_name From mst_plant_code";
+        $sql2 = "SELECT mpc_id,mpc_code,mpc_name From mst_plant_code WHERE mpc_status_flg = 1";
         $query = $this->db->query($sql2);
        
         foreach ($query->result() as $key => $value) {

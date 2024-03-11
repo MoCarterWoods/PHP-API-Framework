@@ -66,6 +66,31 @@ class App_ManagePermis_Detail_model extends CI_Model {
         return $data;
     }
 
+
+    public function insert_permiss($data, $sess) {
+        $permisID = $data["PermisID"];
+        $menuGroup = $data["MenuGroup"];
+
+            $sql_insert = "INSERT INTO sys_permission_detail_app 
+            (spga_id, 
+            sma_id, 
+            spda_status_flg, 
+            spda_created_date, 
+            spda_created_by) 
+            VALUES ('$permisID ', '$menuGroup', 1, NOW() , '$sess')";
+    
+            $query = $this->db->query($sql_insert);
+    
+            // Check if the insert operation was successful
+            if ($this->db->affected_rows() > 0) {
+                return array('result' => 1); // Successful insert
+            } else {
+                return array('result' => 0); // Failed insert
+            }
+        }
+
+    
+
     public function update_flg($data, $sess)
     {
         $stFlg = $data["newStatus"];

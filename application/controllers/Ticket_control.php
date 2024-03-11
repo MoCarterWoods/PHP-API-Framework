@@ -25,6 +25,14 @@ class Ticket_control extends CI_Controller
         echo json_encode($result);
     }
 
+    public function get_status (){
+        $ist_Id = $this->input->get('ist_Id');
+    
+        $result = $this->tkc->get_status($ist_Id);
+    
+        echo json_encode($result);
+    }
+
     public function show_avatar()
     {
         $result = $this->tkc->show_avatar();
@@ -219,6 +227,16 @@ class Ticket_control extends CI_Controller
         $result = $this->tkc->show_prevention($data);
         // echo "<pre>";
         // print_r($result);
+        echo json_encode($result);
+    }
+
+    public function save_prevention()
+    {
+        $data = unserialize($this->input->post('data'));
+        $sess = unserialize($this->input->post('session'));
+
+        $result = $this->tkc->save_prevention($data, $sess);
+
         echo json_encode($result);
     }
 

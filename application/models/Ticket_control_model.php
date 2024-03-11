@@ -120,7 +120,7 @@ class Ticket_control_model extends CI_Model
                         COALESCE ( t12.ide_status_flg, 1 ) AS delivery_status,
                         t1.ist_status_flg 
                     FROM
-                        info_issue_ticket t1
+                        info_issue_ticket t1 
                         LEFT JOIN mst_job_type t2 ON t1.mjt_id = t2.mjt_id
                         LEFT JOIN log_manage_worker t3 ON t1.ist_id = t3.ist_id
                         LEFT JOIN sys_worker_app t4 ON t3.lmw_worker = t4.swa_id
@@ -133,7 +133,7 @@ class Ticket_control_model extends CI_Model
                         LEFT JOIN info_prevention_recurrence t11 ON t1.ist_id = t11.ist_id
                         LEFT JOIN info_delivery_equipment t12 ON t1.ist_id = t12.ist_id 
                     WHERE
-                        t1.ist_status_flg IN ( 1, 3, 5, 7, 8 ) 
+                        t1.ist_status_flg IN ( 1, 3, 5, 7, 8 )  AND (t3.lmw_status_flg IS NULL OR t3.lmw_status_flg IN (1, 3))
                         AND (
                         COALESCE ( t6.ipc_status_flg, 1 ) IN ( 1, 3 )) 
                         AND (
@@ -202,6 +202,46 @@ class Ticket_control_model extends CI_Model
         GROUP_CONCAT( DISTINCT t4.swa_fristname ) AS swa_fristname,
         GROUP_CONCAT( DISTINCT t4.swa_emp_code ) AS swa_emp_code,
         t5.mts_name,
+
+            t1.ist_status_flg 
+        FROM
+            info_issue_ticket t1
+            LEFT JOIN mst_job_type t2 ON t1.mjt_id = t2.mjt_id
+            LEFT JOIN log_manage_worker t3 ON t1.ist_id = t3.ist_id
+            LEFT JOIN sys_worker_app t4 ON t3.lmw_worker = t4.swa_id
+            LEFT JOIN mst_tooling_system t5 ON t1.ist_tool = t5.mts_id
+            LEFT JOIN info_problem_condition t6 ON t1.ist_id = t6.ist_id
+
+        WHERE
+            t1.ist_status_flg IN ( 1, 3, 5, 7, 8 ) 
+            AND (t3.lmw_status_flg IS NULL OR t3.lmw_status_flg IN (1, 3))
+        GROUP BY
+            t1.ist_id,
+            t1.ist_type,
+            t1.ist_pd,
+            t1.ist_line_cd,
+            t1.ist_area_other,
+            t1.ist_process,
+            t1.ist_tool,
+            t1.ist_job_no,
+            t1.mjt_id,
+            t1.ist_request_by,
+            t1.ist_status_flg,
+            t2.mjt_name_eng,
+            t2.mjt_name_thai,
+            t5.mts_name 
+    ORDER BY
+        t1.ist_job_no";
+        $query = $this->db->query($sql);
+        $data = $query->result();
+        return $data;
+    }
+
+
+    public function get_status($ist_Id)
+    {
+        $sql = "SELECT
+        t1.ist_id,
     CASE
             
             WHEN t1.ist_line_cd 
@@ -224,8 +264,6 @@ class Ticket_control_model extends CI_Model
         FROM
             info_issue_ticket t1
             LEFT JOIN mst_job_type t2 ON t1.mjt_id = t2.mjt_id
-            LEFT JOIN log_manage_worker t3 ON t1.ist_id = t3.ist_id
-            LEFT JOIN sys_worker_app t4 ON t3.lmw_worker = t4.swa_id
             LEFT JOIN mst_tooling_system t5 ON t1.ist_tool = t5.mts_id
             LEFT JOIN info_problem_condition t6 ON t1.ist_id = t6.ist_id
             LEFT JOIN info_inspection_method t7 ON t1.ist_id = t7.ist_id
@@ -235,7 +273,7 @@ class Ticket_control_model extends CI_Model
             LEFT JOIN info_prevention_recurrence t11 ON t1.ist_id = t11.ist_id
             LEFT JOIN info_delivery_equipment t12 ON t1.ist_id = t12.ist_id 
         WHERE
-            t1.ist_status_flg IN ( 1, 3, 5, 7, 8 ) 
+            t1.ist_status_flg IN ( 1, 3, 5, 7, 8 ) AND t1.ist_id = '$ist_Id'
             AND (
             COALESCE ( t6.ipc_status_flg, 1 ) IN ( 1, 3 )) 
             AND (
@@ -265,13 +303,11 @@ class Ticket_control_model extends CI_Model
             t2.mjt_name_eng,
             t2.mjt_name_thai,
             t5.mts_name 
-    ORDER BY
-        t1.ist_job_no;";
+";
         $query = $this->db->query($sql);
         $data = $query->result();
         return $data;
     }
-
 
 
 
@@ -593,17 +629,14 @@ class Ticket_control_model extends CI_Model
         t2.iim_id,
         t2.mim_id,
         t2.iim_detail,
-                    t2.iim_status_flg,
-        COALESCE(t2.iim_pic_1, '') AS iim_pic_1,
-        COALESCE(t2.iim_pic_2, '') AS iim_pic_2,
-        COALESCE(t2.iim_pic_3, '') AS iim_pic_3,
+        t2.iim_status_flg,
         t2.iim_path
     FROM 
         info_issue_ticket t1
     LEFT JOIN
         info_inspection_method t2 ON t1.ist_id = t2.ist_id
-            LEFT JOIN
-                    mst_inspection_method t3 ON t2.mim_id = t3.mim_id
+    LEFT JOIN
+        mst_inspection_method t3 ON t2.mim_id = t3.mim_id
     WHERE
         t1.ist_id = '$id' AND t2.iim_status_flg != 0 AND t3.mim_type = 1;";
 
@@ -635,7 +668,7 @@ class Ticket_control_model extends CI_Model
     FROM
         info_inspection_method 
     WHERE
-        ist_id = ? 
+        ist_id = '$id' 
         AND iim_status_flg != 0  LIMIT 1
                     ";
 
@@ -792,14 +825,14 @@ class Ticket_control_model extends CI_Model
         $data_check2 = $query_check->result();
 
         $sql_show_image = "SELECT
-        COALESCE(iim_pic_1, '') AS iim_pic_1,
-        COALESCE(iim_pic_2, '') AS iim_pic_2,
-        COALESCE(iim_pic_3, '') AS iim_pic_3
+        COALESCE(it_pic_1, '') AS it_pic_1,
+        COALESCE(it_pic_2, '') AS it_pic_2,
+        COALESCE(it_pic_3, '') AS it_pic_3
     FROM
-        info_inspection_method 
+    info_troubleshooting 
     WHERE
         ist_id = ? 
-        AND iim_status_flg != 0  LIMIT 1
+        AND it_status_flg != 0  LIMIT 1
                     ";
 
         $query_image = $this->db->query($sql_show_image, array($id));
@@ -1056,8 +1089,22 @@ class Ticket_control_model extends CI_Model
         $query = $this->db->query($sql_show_pb, array($id));
         $data = $query->result();
 
+        $sql_show_image = "SELECT
+            COALESCE(iap_pic1, '') AS iap_pic1,
+            COALESCE(iap_pic2, '') AS iap_pic2,
+            COALESCE(iap_pic3, '') AS iap_pic3
+        FROM
+        info_analyze_problem 
+        WHERE
+            ist_id = ? 
+            AND iap_status_flg != 0  LIMIT 1";
+
+        $query_image = $this->db->query($sql_show_image, array($id));
+        $data_image = $query_image->result();
+
+
         if ($query->num_rows() > 0) {
-            return array('result' => true, 'data' => $data);
+            return array('result' => true, 'data' => $data, 'data_image' => $data_image);
         } else {
             return array('result' => false);
         }
@@ -1066,14 +1113,14 @@ class Ticket_control_model extends CI_Model
     public function save_analyze($data, $sess)
     {
         $id = $data["ist_Id"];
-    
+
         // Clear previous selections
         $this->db->query("UPDATE info_analyze_problem 
                             SET iap_status_flg = 0 , 
                             iap_updated_date = NOW() , 
                             iap_updated_by = '$sess' 
                             WHERE ist_id = '$id'");
-    
+
         // Insert new analyze detail
         $this->db->query("INSERT INTO info_analyze_problem
                             (ist_id, 
@@ -1086,7 +1133,7 @@ class Ticket_control_model extends CI_Model
                             )
                             VALUES
                             ('$id', '{$data['Mdetail']}', 3, NOW(), '$sess', NOW(), '$sess')");
-    
+
         // Insert checkboxes
         foreach ($data['checkboxes'] as $map_id) {
             if ($map_id == '11') {
@@ -1110,7 +1157,7 @@ class Ticket_control_model extends CI_Model
                                     ) VALUES ('$id', $map_id, 3, NOW(), '$sess')");
             }
         }
-    
+
         if ($this->db->affected_rows() > 0) {
             return array('result' => 1); // ส่งค่ากลับว่าการทำงานเสร็จสมบูรณ์
         } else {
@@ -1119,7 +1166,7 @@ class Ticket_control_model extends CI_Model
         // หากไม่มีการอัพเดทใด ๆ สำเร็จ
         return array('result' => 0);
     }
-    
+
 
 
 
@@ -1155,6 +1202,61 @@ class Ticket_control_model extends CI_Model
         }
     }
 
+    public function save_prevention($data, $sess)
+    {
+        $ist_Id = $data['ist_Id'];
+
+        // Clear previous selections
+        $this->db->query("UPDATE info_prevention_recurrence 
+                            SET ipr_status_flg = 0 , 
+                            ipr_updated_date = NOW() , 
+                            ipr_updated_by = '$sess' 
+                            WHERE ist_id = '$ist_Id'");
+
+        $prevenArray = json_decode($data['PreventionallValues'], true);
+        foreach ($prevenArray as $value) {
+            // ใช้ array_values() เพื่อดึงค่าทั้งหมดในแต่ละอาร์เรย์
+            $keys = array_keys($value);
+            $suggest = $value[$keys[0]];
+            $operated = $value[$keys[1]];
+            $schedul = $value[$keys[2]];
+            // ทำการ query
+            $sql_insert_prevention = "INSERT INTO info_prevention_recurrence (
+                ist_id,
+                ipr_suggestions,
+                ipr_operated,
+                ipr_schedule,
+                ipr_status_flg,
+                ipr_created_date,
+                ipr_created_by
+            )
+            VALUES
+                (
+                    '$ist_Id',
+                    '$suggest',
+                    '$operated',
+                    '$schedul',
+                    3,
+                    NOW(),
+                    '$sess' 
+                )";
+
+            // ทำการ execute คำสั่ง SQL INSERT
+            $query_insert_prevention = $this->db->query($sql_insert_prevention);
+
+            if ($this->db->affected_rows() <= 0) {
+                // หากไม่สามารถทำการ INSERT ได้
+                return array('result' => 0); // ส่งค่ากลับว่าไม่มีการอัพเดทหรือไม่สามารถอัพเดทได้
+            }
+        }
+
+        // หากทุกอย่างเสร็จสมบูรณ์
+        return array('result' => 1); // ส่งค่ากลับว่าการทำงานเสร็จสมบูรณ์
+    }
+
+
+
+
 
 
     public function show_delivery($data)
@@ -1189,17 +1291,17 @@ class Ticket_control_model extends CI_Model
     public function save_delivery($data, $sess)
     {
         $id = $data["ist_Id"];
-    
+
         // Clear previous selections
         $this->db->query("UPDATE info_delivery_equipment 
             SET ide_status_flg = 0 , 
             ide_updated_date = NOW() , 
             ide_updated_by = '$sess' 
             WHERE ist_id = '$id'");
-    
+
         // Get detail for Checkbox 1 if it's checked
         $ide_detail1 = !empty($data["details"][0]) ? $data["details"][0] : null;
-    
+
         $checkboxes = array(
             "Checkval1", "Checkval2", "Checkval3", "Checkval4", "Checkval5",
             "Checkval6"
@@ -1223,7 +1325,7 @@ class Ticket_control_model extends CI_Model
                                     ) VALUES ('$id', $mde_id, '$ide_detail', 3, NOW(), '$sess')");
             }
         }
-    
+
         if ($this->db->affected_rows() > 0) {
             return array('result' => 1); // ส่งค่ากลับว่าการทำงานเสร็จสมบูรณ์
         } else {
@@ -1232,7 +1334,7 @@ class Ticket_control_model extends CI_Model
         // หากไม่มีการอัพเดทใด ๆ สำเร็จ
         return array('result' => 0);
     }
-    
+
 
     public function drop_worker($data)
     {
@@ -1266,6 +1368,7 @@ class Ticket_control_model extends CI_Model
 
     public function save_worker($data, $sess)
     {
+
         $id = $data["ist_Id"];
 
         // ทำการอัปเดตข้อมูลในตาราง log_manage_worker โดยเปลี่ยน lmw_status_flg เป็น 0
@@ -1322,13 +1425,13 @@ class Ticket_control_model extends CI_Model
     public function submit_ticket($data, $sess)
     {
         $id = $data["ist_Id"];
-    
+
         $sql_submit_ticket = "UPDATE info_issue_ticket 
             SET ist_status_flg = 7, ist_updated_date = NOW(), 
             ist_updated_by = '$sess'
             WHERE ist_id = '$id';";
         $query = $this->db->query($sql_submit_ticket);
-    
+
         if ($this->db->affected_rows() > 0) {
             return array('result' => 1); // ส่งค่ากลับว่าการทำงานเสร็จสมบูรณ์
         } else {

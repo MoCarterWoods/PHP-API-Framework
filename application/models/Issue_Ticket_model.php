@@ -595,7 +595,28 @@ class Issue_Ticket_model extends CI_Model
 
 
 
-
+                    // INSERT INTO info_inspection_method
+                    $sql_insert_inspection_method = "INSERT INTO info_inspection_method (
+                        ist_id,
+                        mim_id,
+                        iim_detail,
+                        iim_pic_1,
+                        iim_pic_2,
+                        iim_pic_3,
+                        iim_path,
+                        iim_status_flg,
+                        iim_created_date,
+                        iim_created_by
+                    ) VALUES ('$ist_id','$ispec','$ispecdetail','$insfileName1','$insfileName2','$insfileName3','assets/img/upload/inspection/',1,NOW(),'$sess')";
+    
+                        $query_insert_inspection_method = $this->db->query($sql_insert_inspection_method);
+    
+                        if ($this->db->affected_rows() > 0) {
+                            // เพิ่มข้อมูลสำเร็จ
+                            // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
+                        } else {
+                            // ไม่สามารถเพิ่มข้อมูลได้
+                        }
 
 
 
@@ -1073,32 +1094,12 @@ class Issue_Ticket_model extends CI_Model
                     }
                 }
 
-
                 if ($this->db->affected_rows() > 0) {
-                    // INSERT INTO info_inspection_method
-                    $sql_insert_inspection_method = "INSERT INTO info_inspection_method (
-                    ist_id,
-                    mim_id,
-                    iim_detail,
-                    iim_pic_1,
-                    iim_pic_2,
-                    iim_pic_3,
-                    iim_path,
-                    iim_status_flg,
-                    iim_created_date,
-                    iim_created_by
-                ) VALUES ('$ist_id','$ispec','$ispecdetail','$insfileName1','$insfileName2','$insfileName3','assets/img/upload/inspection/',1,NOW(),'$sess')";
 
-                    $query_insert_inspection_method = $this->db->query($sql_insert_inspection_method);
-
-                    if ($this->db->affected_rows() > 0) {
-                        return array('result' => 1, 'ist_id' => $ist_id); // Insert สำเร็จ
-                    } else {
-                        return array('result' => 0, 'message' => 'Insert ล้มเหลวในตาราง info_inspection_method');
-                    }
-                } else {
-                    return array('result' => 0, 'message' => 'Insert ล้มเหลวในตาราง info_problem_condition');
+                    return array('result' => 1, 'ist_id' => $ist_id); // Insert สำเร็จ
                 }
+
+
             } else {
                 return array('result' => 0, 'message' => 'ไม่สามารถดึง ist_id ได้');
             }

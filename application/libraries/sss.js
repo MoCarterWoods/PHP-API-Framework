@@ -1,5 +1,4 @@
 
-
 // ----=- show problem --------
 $(document).on('click', '.actProblem', function () {
     ist_Id = $(this).attr('data-id');
@@ -61,6 +60,7 @@ $(document).on('click', '.actProblem', function () {
                     addRemoveLinks: true,
                     dictDefaultMessage: 'Drop your image here or click to upload',
                     parallelUploads: 1,
+                    autoProcessQueue: false // ปิดการอัพโหลดอัตโนมัติ
                 });
 
                 var filesCount = 0;
@@ -71,7 +71,7 @@ $(document).on('click', '.actProblem', function () {
                         let mockFile = { name: `${imageName}`, size: 12345 };
                         myDropzone.emit("addedfile", mockFile);
                         myDropzone.emit("thumbnail", mockFile, imagePath);
-                        myDropzone.emit("complete", mockFile);
+                        myDropzone.emit("complete", mockFile); // เพิ่มบรรทัดนี้เพื่อให้ Dropzone เป็นสถานะเต็มรูปแบบของไฟล์ที่ถูกเพิ่ม
                         filesCount++;
                     }
                 }

@@ -13,7 +13,7 @@ class ManagePermis_Detail_model extends CI_Model {
 
     public function show_group()
     {
-        $sql_group_per = "SELECT spg_id, spg_name FROM sys_permission_group";
+        $sql_group_per = "SELECT spg_id, spg_name FROM sys_permission_group WHERE spg_status_flg = 1;";
         $query = $this->db->query($sql_group_per);
         $data = $query->result();
 
