@@ -27,5 +27,12 @@ class Ticket_History extends CI_Controller {
         echo json_encode($result);
     }
 
+    public function show_pdf(){
+        $ist_Id = $this->input->post('ist_Id');
+
+        $result = $this->tkh->show_pdf($ist_Id);
+    
+        echo json_encode($result);
+    }
     
 }

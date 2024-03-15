@@ -74,7 +74,7 @@ class Ticket_control_model extends CI_Model
                         COALESCE ( t11.ipr_status_flg, 1 ) IN ( 1, 3 )) 
                         AND (
                         COALESCE ( t12.ide_status_flg, 1 ) IN ( 1, 3 )) 
-                        AND DATE( t1.ist_request_time ) BETWEEN '$startdate' AND '$enddate'
+                        AND DATE( t1.ist_created_date ) BETWEEN '$startdate' AND '$enddate'
                     GROUP BY
                         t1.ist_id,
                         t1.ist_type,
@@ -152,7 +152,7 @@ class Ticket_control_model extends CI_Model
             // Check if $status is empty
             if ($status === '') {
                 // If empty, filter by current date
-                $sql .= " AND DATE(t1.ist_request_time) = CURDATE() ";
+                $sql .= " AND DATE(t1.ist_created_date) = CURDATE() ";
             } else {
                 // If not empty, filter by $status
                 if ($status !== '') {
@@ -526,7 +526,6 @@ class Ticket_control_model extends CI_Model
         $problem = $data["ProblemSel"];
         $detail = $data["ProblemDetail"];
         $id = $data["ist_Id"];
-
 
 
         $sql_update_problem = "UPDATE info_issue_ticket 

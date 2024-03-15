@@ -261,9 +261,14 @@ class Issue_Ticket_model extends CI_Model
 
         $prodcon = $data["ProbCon"];
         $prodcondetail = $data["ProbConDetail"];
-        $pbcheck1 = $data["PbCheckval1"];
-        $pbcheck2 = $data["PbCheckval2"];
-        $pbcheck3 = $data["PbCheckval3"];
+        $checkedValuesPB = json_decode($data["checkedValuesPB"], true);
+
+        $StopDate = $data["StopDate"];
+        $InpRequester = $data["InpRequester"];
+        $InpTimeRq = $data["InpTimeRq"];
+        $InpApprove = $data["InpApprove"];
+        $InpTimeApp = $data["InpTimeApp"];
+
         $prodconpic = $data["fileNamesPb"];
         $fileNames = explode(',', $prodconpic);
 
@@ -291,9 +296,8 @@ class Issue_Ticket_model extends CI_Model
 
         $ispec = $data["InspecMethod"];
         $ispecdetail = $data["InspecDetail"];
-        $inspeccheck1 = $data["InsCheckval1"];
-        $inspeccheck2 = $data["InsCheckval2"];
-        $inspeccheck3 = $data["InsCheckval3"];
+        $checkedValuesInspec = json_decode($data["checkedValuesInspec"], true);
+
         $inspecpic = $data["fileNamesIns"];
         $insfileNames = explode(',', $inspecpic);
 
@@ -316,13 +320,16 @@ class Issue_Ticket_model extends CI_Model
 
         $trouble = $data["Trouble"];
         $troubledetail = $data["TroubleDetail"];
+        $checkedValuesTrob1 = json_decode($data["checkedValuesTrob1"], true);
+        $checkedValuesTrob2 = json_decode($data["checkedValuesTrob2"], true);
 
-        $troubleCheckval1 = $data["TroubleCheckval1"];
-        $troubleCheckval2 = $data["TroubleCheckval2"];
-        $troubleCheckval3 = $data["TroubleCheckval3"];
-        $troubleCheckval4 = $data["TroubleCheckval4"];
-        $troubleDetail3 = $data["TroubleDetail3"];
-        $troubleDetail4 = $data["TroubleDetail4"];
+        $checkboxTrob2 = array();
+        $detailsTrob2 = array();
+        foreach ($checkedValuesTrob2 as $Trobvalue) {
+            $checkboxTrob2[] = $Trobvalue["checkbox"];
+            $detailsTrob2[] = $Trobvalue["detail"];
+        }
+
 
         $troublepic = $data["fileNamesTroub"];
         $troubfileNames = explode(',', $troublepic);
@@ -345,30 +352,14 @@ class Issue_Ticket_model extends CI_Model
         $troubfileName3 = isset($troubfilteredFileNames[2]) ? $troubfilteredFileNames[2] : '';
 
 
-        $deliverydetail = $data["Detaildelivery"];
-        $deliveryCheckval1 = $data["deliveryCheckval1"];
-        $deliveryCheckval2 = $data["deliveryCheckval2"];
-        $deliveryCheckval3 = $data["deliveryCheckval3"];
-        $deliveryCheckval4 = $data["deliveryCheckval4"];
-        $deliveryCheckval5 = $data["deliveryCheckval5"];
-        $deliveryCheckval6 = $data["deliveryCheckval6"];
+        
+
 
 
         $analyzdetail = $data["AnalyzDetail"];
-        $analyzcheck1 = $data["Checkval1"];
-        $analyzcheck2 = $data["Checkval2"];
-        $analyzcheck3 = $data["Checkval3"];
-        $analyzcheck4 = $data["Checkval4"];
-        $analyzcheck5 = $data["Checkval5"];
-        $analyzcheck6 = $data["Checkval6"];
-        $analyzcheck7 = $data["Checkval7"];
-        $analyzcheck8 = $data["Checkval8"];
-        $analyzcheck9 = $data["Checkval9"];
-        $analyzcheck10 = $data["Checkval10"];
-        $analyzcheck11 = $data["Checkval11"];
         $detailcheck11 = $data["Detailcheck11"];
 
-        $analyzpic = $data["fileNamesTroub"];
+        $analyzpic = $data["fileNamesAnalz"];
         $analyzfileNames = explode(',', $analyzpic);
 
 
@@ -400,6 +391,9 @@ class Issue_Ticket_model extends CI_Model
         ist_maker,
         ist_model,
         ist_job_no,
+        ist_start_date,
+        ist_check_date,
+        ist_check_by,
         ist_date,
         mjt_id,
         mpc_id,
@@ -410,7 +404,7 @@ class Issue_Ticket_model extends CI_Model
         ist_status_flg,
         ist_created_date,
         ist_created_by) 
-        VALUES (2,'$areapd','$arealine','$areaother','$processfun','$toolsys','$maker','$model','$code',NOW(),'$jobtype','$prodcon','$ispec','$trouble','$sess',NOW(),3,NOW(),'$sess')";
+        VALUES (2,'$areapd','$arealine','$areaother','$processfun','$toolsys','$maker','$model','$code','$StopDate','$InpTimeApp','$InpApprove',NOW(),'$jobtype','$prodcon','$ispec','$trouble','$InpRequester','$InpTimeRq',3,NOW(),'$sess')";
 
         $query_insert_issue_ticket = $this->db->query($sql_insert_issue_ticket);
 
@@ -439,60 +433,22 @@ class Issue_Ticket_model extends CI_Model
 
                 $query_insert_problem_condition = $this->db->query($sql_insert_problem_condition);
 
-                if ($pbcheck1 !== '') {
-                    $sql_insert_problem_1 = "INSERT INTO info_problem_condition (
-                        ist_id,
-                        mpc_id,
-                        ipc_status_flg,
-                        ipc_created_date,
-                        ipc_created_by)
-                    VALUES ('$ist_id','$pbcheck1',1,NOW(),'$sess')";
-
-                    $query_insert_problem_1 = $this->db->query($sql_insert_problem_1);
-
-                    if ($this->db->affected_rows() > 0) {
-                        // เพิ่มข้อมูลสำเร็จ
-                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                    } else {
-                        // ไม่สามารถเพิ่มข้อมูลได้
-                    }
-                }
-
-                if ($pbcheck2 !== '') {
-                    $sql_insert_problem_2 = "INSERT INTO info_problem_condition (
-                        ist_id,
-                        mpc_id,
-                        ipc_status_flg,
-                        ipc_created_date,
-                        ipc_created_by)
-                    VALUES ('$ist_id','$pbcheck2',1,NOW(),'$sess')";
-
-                    $query_insert_problem_2 = $this->db->query($sql_insert_problem_2);
-
-                    if ($this->db->affected_rows() > 0) {
-                        // เพิ่มข้อมูลสำเร็จ
-                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                    } else {
-                        // ไม่สามารถเพิ่มข้อมูลได้
-                    }
-                }
-
-                if ($pbcheck3 !== '') {
-                    $sql_insert_problem_3 = "INSERT INTO info_problem_condition (
-                        ist_id,
-                        mpc_id,
-                        ipc_status_flg,
-                        ipc_created_date,
-                        ipc_created_by)
-                    VALUES ('$ist_id','$pbcheck3',1,NOW(),'$sess')";
-
-                    $query_insert_problem_3 = $this->db->query($sql_insert_problem_3);
-
-                    if ($this->db->affected_rows() > 0) {
-                        // เพิ่มข้อมูลสำเร็จ
-                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                    } else {
-                        // ไม่สามารถเพิ่มข้อมูลได้
+                if (!empty($checkedValuesPB)) {
+                    foreach ($checkedValuesPB as $checkedValue) {
+        
+                        $mpc_id = $checkedValue;
+        
+        
+                        $sql_insert_problem_condition = "INSERT INTO info_problem_condition (
+                            ist_id,
+                            mpc_id,
+                            ipc_status_flg,
+                            ipc_created_date,
+                            ipc_created_by)
+                        VALUES ('$ist_id','$mpc_id',1,NOW(),'$sess')";
+        
+        
+                        $query_insert_problem_condition = $this->db->query($sql_insert_problem_condition);
                     }
                 }
 
@@ -513,84 +469,35 @@ class Issue_Ticket_model extends CI_Model
                 $query_insert_troubleshooting = $this->db->query($sql_insert_troubleshooting);
 
 
-
-                if ($troubleCheckval1 !== '') {
-                    $sql_insert_troubel_1 = "INSERT INTO info_troubleshooting (
-                        ist_id,
-                        mt_id,
-                        it_status_flg,
-                        it_created_date,
-                        it_created_by)
-                    VALUES ('$ist_id','$troubleCheckval1',1,NOW(),'$sess')";
-
-                    $query_insert_troubel_1 = $this->db->query($sql_insert_troubel_1);
-
-                    if ($this->db->affected_rows() > 0) {
-                        // เพิ่มข้อมูลสำเร็จ
-                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                    } else {
-                        // ไม่สามารถเพิ่มข้อมูลได้
-                    }
-                }
-
-                if ($troubleCheckval2 !== '') {
-                    $sql_insert_troubel_2 = "INSERT INTO info_troubleshooting (
+                if (!empty($checkedValuesTrob1)) {
+                    foreach ($checkedValuesTrob1 as $mt_id) {
+                        $sql_update_check1 = "INSERT INTO info_troubleshooting (
                             ist_id,
                             mt_id,
                             it_status_flg,
                             it_created_date,
                             it_created_by)
-                        VALUES ('$ist_id','$troubleCheckval2',1,NOW(),'$sess')";
-
-                    $query_insert_troubel_2 = $this->db->query($sql_insert_troubel_2);
-
-                    if ($this->db->affected_rows() > 0) {
-                        // เพิ่มข้อมูลสำเร็จ
-                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                    } else {
-                        // ไม่สามารถเพิ่มข้อมูลได้
+                        VALUES ('$ist_id','$mt_id',1,NOW(),'$sess')";
+                        $query_update_check1 = $this->db->query($sql_update_check1);
+                    }
+                }
+        
+                // Insert new troubleshooting entries for CheckedValues2
+                if (!empty($checkboxTrob2) && !empty($detailsTrob2) && count($checkboxTrob2) === count($detailsTrob2)) {
+                    foreach ($checkboxTrob2 as $key => $checkbox) {
+                        $detail = $detailsTrob2[$key];
+                        $sql_update_check2 = "INSERT INTO info_troubleshooting (
+                            ist_id,
+                            mt_id,
+                            it_detail,
+                            it_status_flg,
+                            it_created_date,
+                            it_created_by)
+                        VALUES ('$ist_id','$checkbox','$detail',1,NOW(),'$sess')";
+                        $query_update_check2 = $this->db->query($sql_update_check2);
                     }
                 }
 
-                if ($troubleCheckval3 !== '') {
-                    $sql_insert_troubel_3 = "INSERT INTO info_troubleshooting (
-                                ist_id,
-                                mt_id,
-                                it_detail,
-                                it_status_flg,
-                                it_created_date,
-                                it_created_by)
-                            VALUES ('$ist_id','$troubleCheckval3','$troubleDetail3',1,NOW(),'$sess')";
-
-                    $query_insert_troubel_3 = $this->db->query($sql_insert_troubel_3);
-
-                    if ($this->db->affected_rows() > 0) {
-                        // เพิ่มข้อมูลสำเร็จ
-                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                    } else {
-                        // ไม่สามารถเพิ่มข้อมูลได้
-                    }
-                }
-
-                if ($troubleCheckval4 !== '') {
-                    $sql_insert_troubel_4 = "INSERT INTO info_troubleshooting (
-                                    ist_id,
-                                    mt_id,
-                                    it_detail,
-                                    it_status_flg,
-                                    it_created_date,
-                                    it_created_by)
-                                VALUES ('$ist_id','$troubleCheckval4','$troubleDetail4',1,NOW(),'$sess')";
-
-                    $query_insert_troubel_4 = $this->db->query($sql_insert_troubel_4);
-
-                    if ($this->db->affected_rows() > 0) {
-                        // เพิ่มข้อมูลสำเร็จ
-                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                    } else {
-                        // ไม่สามารถเพิ่มข้อมูลได้
-                    }
-                }
 
 
 
@@ -619,374 +526,99 @@ class Issue_Ticket_model extends CI_Model
                         }
 
 
+                        if (!empty($checkedValuesInspec)) {
+                            foreach ($checkedValuesInspec as $checkedValueisp) {
+                
+                                $mim_id = $checkedValueisp;
+                
+                
+                                $sql_insert_inspection = "INSERT INTO info_inspection_method (
+                                    ist_id,
+                                    mim_id,
+                                    iim_status_flg,
+                                    iim_created_date,
+                                    iim_created_by)
+                                VALUES ('$ist_id','$mim_id',1,NOW(),'$sess')";
+                
+                
+                                $query_insert_inspection = $this->db->query($sql_insert_inspection);
+                            }
+                        }
+
+                        
+                        
+                        $ide_detail1 = !empty($data["detaildeliver"][0]) ? $data["detaildeliver"][0] : null;
+
+                        $checkboxDeliver = array(
+                            "Checkval1", "Checkval2", "Checkval3", "Checkval4", "Checkval5",
+                            "Checkval6"
+                        );
+
+
+                
+                        foreach ($checkboxDeliver as $index => $checkbox) {
+                            if (!empty($data["checkboxdeliver"][$index])) {
+                                $mde_id = $data["checkboxdeliver"][$index];
+                                if ($checkbox === "Checkval1") {
+                                    // Use the previously fetched detail for Checkbox 1
+                                    $ide_detail = $ide_detail1;
+                                } else {
+                                    $ide_detail = null; // Detail for other checkboxes is set to null
+                                }
+                                $this->db->query("INSERT INTO info_delivery_equipment (
+                                    ist_id,
+                                    mde_id,
+                                    ide_detail,
+                                    ide_status_flg,
+                                    ide_created_date,
+                                    ide_created_by)
+                                    VALUES ('$ist_id','$mde_id','$ide_detail',1,NOW(),'$sess')");
+                            }
+                        }
 
 
 
-
-                if ($inspeccheck1 !== '') {
-                    $sql_insert_inspec_1 = "INSERT INTO info_inspection_method (
+               
+                if ($analyzdetail !== '' && $anafileName1 !== '') {
+                    $sql_insert_analyzdetail = "INSERT INTO info_analyze_problem (
                         ist_id,
-                        mim_id,
-                        iim_status_flg,
-                        iim_created_date,
-                        iim_created_by)
-                    VALUES ('$ist_id','$inspeccheck1',1,NOW(),'$sess')";
-
-                    $query_insert_inspec_1 = $this->db->query($sql_insert_inspec_1);
-
-                    if ($this->db->affected_rows() > 0) {
-                        // เพิ่มข้อมูลสำเร็จ
-                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                    } else {
-                        // ไม่สามารถเพิ่มข้อมูลได้
-                    }
-                }
-
-                if ($inspeccheck2 !== '') {
-                    $sql_insert_inspec_2 = "INSERT INTO info_inspection_method (
-                        ist_id,
-                        mim_id,
-                        iim_status_flg,
-                        iim_created_date,
-                        iim_created_by)
-                    VALUES ('$ist_id','$inspeccheck2',1,NOW(),'$sess')";
-
-                    $query_insert_inspec_2 = $this->db->query($sql_insert_inspec_2);
-
-                    if ($this->db->affected_rows() > 0) {
-                        // เพิ่มข้อมูลสำเร็จ
-                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                    } else {
-                        // ไม่สามารถเพิ่มข้อมูลได้
-                    }
-                }
-
-                if ($inspeccheck3 !== '') {
-                    $sql_insert_inspec_3 = "INSERT INTO info_inspection_method (
-                        ist_id,
-                        mim_id,
-                        iim_status_flg,
-                        iim_created_date,
-                        iim_created_by)
-                    VALUES ('$ist_id','$inspeccheck3',1,NOW(),'$sess')";
-
-                    $query_insert_inspec_3 = $this->db->query($sql_insert_inspec_3);
-
-                    if ($this->db->affected_rows() > 0) {
-                        // เพิ่มข้อมูลสำเร็จ
-                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                    } else {
-                        // ไม่สามารถเพิ่มข้อมูลได้
-                    }
-                }
-
-
-                if ($deliveryCheckval1 !== '') {
-                    $sql_insert_delivery_1 = "INSERT INTO info_delivery_equipment (
-                    ist_id,
-                    mde_id,
-                    ide_detail,
-                    ide_status_flg,
-                    ide_created_date,
-                    ide_created_by)
-                    VALUES ('$ist_id','$deliveryCheckval1','$deliverydetail',1,NOW(),'$sess')";
-
-                    $query_insert_delivery_1 = $this->db->query($sql_insert_delivery_1);
-
-                    if ($this->db->affected_rows() > 0) {
-                        // เพิ่มข้อมูลสำเร็จ
-                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                    } else {
-                        // ไม่สามารถเพิ่มข้อมูลได้
-                    }
-                }
-
-                // เพิ่ม query INSERT สำหรับ $deliveryCheckval2
-                if ($deliveryCheckval2 !== '') {
-                    $sql_insert_delivery_2 = "INSERT INTO info_delivery_equipment (
-                    ist_id,
-                    mde_id,
-                    ide_status_flg,
-                    ide_created_date,
-                    ide_created_by)
-                    VALUES ('$ist_id','$deliveryCheckval2',1,NOW(),'$sess')";
-
-                    $query_insert_delivery_2 = $this->db->query($sql_insert_delivery_2);
-
-                    if ($this->db->affected_rows() > 0) {
-                        // เพิ่มข้อมูลสำเร็จ
-                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                    } else {
-                        // ไม่สามารถเพิ่มข้อมูลได้
-                    }
-                }
-                if ($deliveryCheckval3 !== '') {
-                    $sql_insert_delivery_3 = "INSERT INTO info_delivery_equipment (
-                    ist_id,
-                    mde_id,
-                    ide_status_flg,
-                    ide_created_date,
-                    ide_created_by)
-                    VALUES ('$ist_id','$deliveryCheckval3',1,NOW(),'$sess')";
-
-                    $query_insert_delivery_3 = $this->db->query($sql_insert_delivery_3);
-
-                    if ($this->db->affected_rows() > 0) {
-                        // เพิ่มข้อมูลสำเร็จ
-                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                    } else {
-                        // ไม่สามารถเพิ่มข้อมูลได้
-                    }
-                }
-                if ($deliveryCheckval4 !== '') {
-                    $sql_insert_delivery_4 = "INSERT INTO info_delivery_equipment (
-                    ist_id,
-                    mde_id,
-                    ide_status_flg,
-                    ide_created_date,
-                    ide_created_by)
-                    VALUES ('$ist_id','$deliveryCheckval4',1,NOW(),'$sess')";
-
-                    $query_insert_delivery_4 = $this->db->query($sql_insert_delivery_4);
-
-                    if ($this->db->affected_rows() > 0) {
-                        // เพิ่มข้อมูลสำเร็จ
-                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                    } else {
-                        // ไม่สามารถเพิ่มข้อมูลได้
-                    }
-                }
-                if ($deliveryCheckval5 !== '') {
-                    $sql_insert_delivery_5 = "INSERT INTO info_delivery_equipment (
-                    ist_id,
-                    mde_id,
-                    ide_status_flg,
-                    ide_created_date,
-                    ide_created_by)
-                    VALUES ('$ist_id','$deliveryCheckval5',1,NOW(),'$sess')";
-
-                    $query_insert_delivery_5 = $this->db->query($sql_insert_delivery_5);
-
-                    if ($this->db->affected_rows() > 0) {
-                        // เพิ่มข้อมูลสำเร็จ
-                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                    } else {
-                        // ไม่สามารถเพิ่มข้อมูลได้
-                    }
-                }
-                if ($deliveryCheckval6 !== '') {
-                    $sql_insert_delivery_6 = "INSERT INTO info_delivery_equipment (
-                    ist_id,
-                    mde_id,
-                    ide_status_flg,
-                    ide_created_date,
-                    ide_created_by)
-                    VALUES ('$ist_id','$deliveryCheckval6',1,NOW(),'$sess')";
-
-                    $query_insert_delivery_6 = $this->db->query($sql_insert_delivery_6);
-
-                    if ($this->db->affected_rows() > 0) {
-                        // เพิ่มข้อมูลสำเร็จ
-                        // ทำตามขั้นตอนที่คุณต้องการเพิ่มเติม
-                    } else {
-                        // ไม่สามารถเพิ่มข้อมูลได้
-                    }
-                }
-
-                $sql_insert_analyzdetail = "INSERT INTO info_analyze_problem (
-                    ist_id,
-                    iap_detail,
-                    iap_pic1,
-                    iap_pic2,
-                    iap_pic3,
-                    iap_path,
-                    iap_status_flg,
-                    iap_created_date,
-                    iap_created_by
-                    ) VALUES ('$ist_id','$analyzdetail','$anafileName1','$anafileName2','$anafileName3','assets/img/upload/analyz/',1,NOW(),'$sess')";
-
-                $query_insert_analyzdetail = $this->db->query($sql_insert_analyzdetail);
-
-
-
-
-
-                if ($analyzcheck1 !== '') {
-                    $sql_insert_analyzcheck1 = "INSERT INTO info_analyze_problem (
-                        ist_id,
-                        map_id,
-                        iap_status_flg,
-                        iap_created_date,
-                        iap_created_by
-                        ) VALUES ('$ist_id',$analyzcheck1,1,NOW(),'$sess')";
-
-                    $query_insert_analyzcheck1 = $this->db->query($sql_insert_analyzcheck1);
-
-                    if ($this->db->affected_rows() > 0) {
-                    } else {
-                    }
-                }
-
-                if ($analyzcheck2 !== '') {
-                    $sql_insert_analyzcheck2 = "INSERT INTO info_analyze_problem (
-                        ist_id,
-                        map_id,
-                        iap_status_flg,
-                        iap_created_date,
-                        iap_created_by
-                        ) VALUES ('$ist_id',$analyzcheck2,1,NOW(),'$sess')";
-
-                    $query_insert_analyzcheck2 = $this->db->query($sql_insert_analyzcheck2);
-
-                    if ($this->db->affected_rows() > 0) {
-                    } else {
-                    }
-                }
-
-                if ($analyzcheck3 !== '') {
-                    $sql_insert_analyzcheck3 = "INSERT INTO info_analyze_problem (
-                        ist_id,
-                        map_id,
-                        iap_status_flg,
-                        iap_created_date,
-                        iap_created_by
-                        ) VALUES ('$ist_id',$analyzcheck3,1,NOW(),'$sess')";
-
-                    $query_insert_analyzcheck3 = $this->db->query($sql_insert_analyzcheck3);
-
-                    if ($this->db->affected_rows() > 0) {
-                    } else {
-                    }
-                }
-
-                if ($analyzcheck4 !== '') {
-                    $sql_insert_analyzcheck4 = "INSERT INTO info_analyze_problem (
-                        ist_id,
-                        map_id,
-                        iap_status_flg,
-                        iap_created_date,
-                        iap_created_by
-                        ) VALUES ('$ist_id',$analyzcheck4,1,NOW(),'$sess')";
-
-                    $query_insert_analyzcheck4 = $this->db->query($sql_insert_analyzcheck4);
-
-                    if ($this->db->affected_rows() > 0) {
-                    } else {
-                    }
-                }
-
-                if ($analyzcheck5 !== '') {
-                    $sql_insert_analyzcheck5 = "INSERT INTO info_analyze_problem (
-                        ist_id,
-                        map_id,
-                        iap_status_flg,
-                        iap_created_date,
-                        iap_created_by
-                        ) VALUES ('$ist_id',$analyzcheck5,1,NOW(),'$sess')";
-
-                    $query_insert_analyzcheck5 = $this->db->query($sql_insert_analyzcheck5);
-
-                    if ($this->db->affected_rows() > 0) {
-                    } else {
-                    }
-                }
-
-                if ($analyzcheck6 !== '') {
-                    $sql_insert_analyzcheck6 = "INSERT INTO info_analyze_problem (
-                        ist_id,
-                        map_id,
-                        iap_status_flg,
-                        iap_created_date,
-                        iap_created_by
-                        ) VALUES ('$ist_id',$analyzcheck6,1,NOW(),'$sess')";
-
-                    $query_insert_analyzcheck6 = $this->db->query($sql_insert_analyzcheck6);
-
-                    if ($this->db->affected_rows() > 0) {
-                    } else {
-                    }
-                }
-
-                if ($analyzcheck7 !== '') {
-                    $sql_insert_analyzcheck7 = "INSERT INTO info_analyze_problem (
-                        ist_id,
-                        map_id,
-                        iap_status_flg,
-                        iap_created_date,
-                        iap_created_by
-                        ) VALUES ('$ist_id',$analyzcheck7,1,NOW(),'$sess')";
-
-                    $query_insert_analyzcheck7 = $this->db->query($sql_insert_analyzcheck7);
-
-                    if ($this->db->affected_rows() > 0) {
-                    } else {
-                    }
-                }
-
-                if ($analyzcheck8 !== '') {
-                    $sql_insert_analyzcheck8 = "INSERT INTO info_analyze_problem (
-                        ist_id,
-                        map_id,
-                        iap_status_flg,
-                        iap_created_date,
-                        iap_created_by
-                        ) VALUES ('$ist_id',$analyzcheck8,1,NOW(),'$sess')";
-
-                    $query_insert_analyzcheck8 = $this->db->query($sql_insert_analyzcheck8);
-
-                    if ($this->db->affected_rows() > 0) {
-                    } else {
-                    }
-                }
-
-                if ($analyzcheck9 !== '') {
-                    $sql_insert_analyzcheck9 = "INSERT INTO info_analyze_problem (
-                        ist_id,
-                        map_id,
-                        iap_status_flg,
-                        iap_created_date,
-                        iap_created_by
-                        ) VALUES ('$ist_id',$analyzcheck9,1,NOW(),'$sess')";
-
-                    $query_insert_analyzcheck9 = $this->db->query($sql_insert_analyzcheck9);
-
-                    if ($this->db->affected_rows() > 0) {
-                    } else {
-                    }
-                }
-
-                if ($analyzcheck10 !== '') {
-                    $sql_insert_analyzcheck10 = "INSERT INTO info_analyze_problem (
-                        ist_id,
-                        map_id,
-                        iap_status_flg,
-                        iap_created_date,
-                        iap_created_by
-                        ) VALUES ('$ist_id',$analyzcheck10,1,NOW(),'$sess')";
-
-                    $query_insert_analyzcheck10 = $this->db->query($sql_insert_analyzcheck10);
-
-                    if ($this->db->affected_rows() > 0) {
-                    } else {
-                    }
-                }
-
-                if ($analyzcheck11 !== '') {
-                    $sql_insert_analyzcheck11 = "INSERT INTO info_analyze_problem (
-                        ist_id,
-                        map_id,
                         iap_detail,
+                        iap_pic1,
+                        iap_pic2,
+                        iap_pic3,
+                        iap_path,
                         iap_status_flg,
                         iap_created_date,
                         iap_created_by
-                        ) VALUES ('$ist_id',$analyzcheck11,'$detailcheck11',1,NOW(),'$sess')";
+                        ) VALUES ('$ist_id','$analyzdetail','$anafileName1','$anafileName2','$anafileName3','assets/img/upload/analyz/',1,NOW(),'$sess')";
+                
+                    $query_insert_analyzdetail = $this->db->query($sql_insert_analyzdetail);
+                }
+                
 
-                    $query_insert_analyzcheck11 = $this->db->query($sql_insert_analyzcheck11);
-
-                    if ($this->db->affected_rows() > 0) {
-                    } else {
+                if (!empty($data['checkboxanalyz'])) {
+                    foreach ($data['checkboxanalyz'] as $map_id) {
+                        if ($map_id == '11') {
+                            $this->db->query("INSERT INTO info_analyze_problem (
+                                ist_id,
+                                map_id,
+                                iap_detail,
+                                iap_status_flg,
+                                iap_created_date,
+                                iap_created_by
+                                ) VALUES ('$ist_id',$map_id,'$detailcheck11',1,NOW(),'$sess')");
+                        } else {
+                            $this->db->query("INSERT INTO info_analyze_problem (
+                                ist_id,
+                                map_id,
+                                iap_status_flg,
+                                iap_created_date,
+                                iap_created_by
+                                ) VALUES ('$ist_id',$map_id,1,NOW(),'$sess')");
+                        }
                     }
                 }
+                
 
 
 
@@ -1093,6 +725,7 @@ class Issue_Ticket_model extends CI_Model
                         $reqPart_status = 0;
                     }
                 }
+
 
                 if ($this->db->affected_rows() > 0) {
 
